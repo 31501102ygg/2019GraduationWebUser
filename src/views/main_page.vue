@@ -15,7 +15,7 @@
                             <a class="nav-link active" ref="home" href="#/home">首页</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="#/">电影</a>
+                            <a class="nav-link" href="#/movie">电影</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="#/">影评</a>

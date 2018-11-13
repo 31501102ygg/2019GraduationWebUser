@@ -3,11 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import $ from 'jquery'
+import axios from "axios"
+import global_ from './utils/global.vue'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import $ from 'jquery'
 
 Vue.config.productionTip = false
+Vue.prototype.GLOBAL = global_;
+axios.defaults.baseURL=global_.BASE_URL;
+Vue.prototype.$axios = axios
 
 /* eslint-disable no-new */
 new Vue({
