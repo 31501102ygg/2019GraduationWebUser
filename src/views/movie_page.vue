@@ -49,6 +49,55 @@ export default {
       select_type: "",
       select_country: ""
     };
+  },
+  watch: {
+    currentPageNum: function(newPageNum, oldPageNum) {
+      this.searchForm.pageNum = newPageNum;
+    }
+  },
+  methods: {
+    typeClick(value) {
+      this.searchForm.type = value;
+      this.$options.methods.searchMovie.bind(this)();
+    },
+    countryClick(value) {
+      this.searchForm.makeState = value;
+      this.$options.methods.searchMovie.bind(this)();
+    },
+    searchMovie() {
+      console.log(this.currentPageNum);
+      this.$axios
+        .post("/movie/search", this.searchForm)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          let movies = json.data.list;
+          this.totalMovieNumber = json.data.pageNumber;
+          this.movies.movies1.splice(0);
+          this.movies.movies2.splice(0);
+          this.movies.movies3.splice(0);
+          this.movies.movies4.splice(0);
+          if (movies.length <= 5) {
+            this.movies.movies1 = movies.slice(0, movies.length);
+          } else if (movies.length <= 10) {
+            this.movies.movies1 = movies.slice(0, 5);
+            this.movies.movies2 = movies.slice(5, movies.length);
+          } else if (movies.length <= 15) {
+            this.movies.movies1 = movies.slice(0, 5);
+            this.movies.movies2 = movies.slice(5, 10);
+            this.movies.movies3 = movies.slice(10, movies.length);
+          } else if (movies.length <= 20) {
+            this.movies.movies1 = movies.slice(0, 5);
+            this.movies.movies2 = movies.slice(5, 10);
+            this.movies.movies3 = movies.slice(10, 15);
+            this.movies.movies4 = movies.slice(15, movies.length);
+          }
+        });
+    }
+  },
+  components: {
+    pagination
   }
 };
 </script>
