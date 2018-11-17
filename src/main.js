@@ -7,7 +7,6 @@ import axios from "axios"
 import global_ from './utils/global.vue'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import $ from 'jquery'
 
 Vue.config.productionTip = false
 Vue.prototype.GLOBAL = global_;

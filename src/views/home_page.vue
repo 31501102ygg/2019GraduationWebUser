@@ -45,16 +45,16 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="javascript:void(0);" aria-label="Previous" @click="activeHotMoviePage=activeHotMoviePage-1===0?5:activeHotMoviePage-1">
+                            <a class="page-link" href="javascript:void(0);" aria-label="Previous" @click="getHotPre">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
                         <li v-for="item in pageIndex" :key="item.id" :class="{'page-item':1===1,active:item.id === activeHotMoviePage}">
-                            <a class="page-link" href="javascript:void(0);" @click="activeHotMoviePage=item.id">{{item.id}}</a>
+                            <a class="page-link" href="javascript:void(0);" @click="reloadHotMovies(item.id)">{{item.id}}</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="javascript:void(0);" aria-label="Next" @click="activeHotMoviePage=activeHotMoviePage+1===6?1:activeHotMoviePage+1">
+                            <a class="page-link" href="javascript:void(0);" aria-label="Next" @click="getHotNext">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -67,7 +67,7 @@
             <hr>
             <div class="row">
                 <div class="col" v-for="hotmovie in hotmovies" v-bind:key="hotmovie.id">
-                    <img class="img-fluid" :src="hotmovie.img_url" alt="">
+                    <img class="img-fluid" :src="hotmovie.imgUrl" alt="">
                     <span>{{hotmovie.name}}</span>
                 </div>
             </div>
@@ -79,16 +79,16 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="javascript:void(0);" aria-label="Previous" @click="activeNewMoviePage=activeNewMoviePage-1===0?5:activeNewMoviePage-1">
+                            <a class="page-link" href="javascript:void(0);" aria-label="Previous" @click="getPre">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
                         <li v-for="item in pageIndex" :key="item.id" :ref="item.id" :class="{'page-item':1===1,active:item.id === activeNewMoviePage}">
-                            <a class="page-link" href="javascript:void(0);" @click="activeNewMoviePage=item.id">{{item.id}}</a>
+                            <a class="page-link" href="javascript:void(0);" @click="reloadNewestMovies(item.id)">{{item.id}}</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="javascript:void(0);" aria-label="Next" @click="activeNewMoviePage=activeNewMoviePage+1===6?1:activeNewMoviePage+1">
+                            <a class="page-link" href="javascript:void(0);" aria-label="Next" @click="getNext">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -100,9 +100,9 @@
         <div class="container clearfix">
             <hr>
             <div class="row">
-                <div class="col" v-for="hotmovie in hotmovies" v-bind:key="hotmovie.id">
-                    <img class="img-fluid" :src="hotmovie.img_url" alt="">
-                    <span>{{hotmovie.name}}</span>
+                <div class="col" v-for="movie in newMovies" v-bind:key="movie.id">
+                    <img class="img-fluid" :src="movie.imgUrl" alt="">
+                    <span>{{movie.name}}</span>
                 </div>
             </div>
         </div>
@@ -113,46 +113,92 @@
 var index = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
 export default {
   name: "home_page",
+  created() {
+    this.$options.methods.loadNewestMovies.bind(this)();
+    this.$options.methods.loadHotMovies.bind(this)();
+  },
   data() {
     return {
       pageIndex: index,
       activeHotMoviePage: 1,
       activeNewMoviePage: 1,
-      hotmovies: [
-        {
-          id: 0,
-          name: "学习 JavaScript",
-          img_url:
-            "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2537158013.webp"
-        },
-        {
-          id: 1,
-          name: "学习 Vue",
-          img_url:
-            "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2537158013.webp"
-        },
-        {
-          id: 2,
-          name: "学习 Vue",
-          img_url:
-            "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2537158013.webp"
-        },
-        {
-          id: 3,
-          name: "学习 Vue",
-          img_url:
-            "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2537158013.webp"
-        },
-        {
-          id: 4,
-          name: "整个牛项目",
-          img_url:
-            "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2537158013.webp"
-        }
-      ]
+      hotmovies: [],
+      newMovies: []
     };
   },
   methods: {
+    //最新电影方法区
+    getNext() {
+      this.activeNewMoviePage =
+        this.activeNewMoviePage + 1 === 6 ? 1 : this.activeNewMoviePage + 1;
+      this.$options.methods.loadNewestMovies.bind(this)();
+    },
+    getPre() {
+      this.activeNewMoviePage =
+        this.activeNewMoviePage - 1 === 0 ? 5 : this.activeNewMoviePage - 1;
+      this.$options.methods.loadNewestMovies.bind(this)();
+    },
+    reloadNewestMovies(id) {
+      this.activeNewMoviePage = id;
+      this.$options.methods.loadNewestMovies.bind(this)();
+    },
+    //最热电影方法区
+    getHotNext() {
+      this.activeHotMoviePage =
+        this.activeHotMoviePage + 1 === 6 ? 1 : this.activeHotMoviePage + 1;
+      this.$options.methods.loadHotMovies.bind(this)();
+    },
+    getHotPre() {
+      this.activeHotMoviePage =
+        this.activeHotMoviePage - 1 === 0 ? 5 : this.activeHotMoviePage - 1;
+      this.$options.methods.loadHotMovies.bind(this)();
+    },
+    reloadHotMovies(id) {
+      this.activeHotMoviePage = id;
+      this.$options.methods.loadHotMovies.bind(this)();
+    },
+    loadNewestMovies() {
+      let data = {
+        pageNum: this.activeNewMoviePage,
+        pageSize: 5
+      };
+      this.$axios
+        .post("/movie/newest", data)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          if (json.code === "ACK") {
+            this.newMovies = json.data.list;
+          } else {
+            this.$message.error(json.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },   
+    loadHotMovies() {
+      let data = {
+        pageNum: this.activeHotMoviePage,
+        pageSize: 5
+      };
+      this.$axios
+        .post("/movie/newest", data)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          if (json.code === "ACK") {
+            this.hotmovies = json.data.list;
+          } else {
+            this.$message.error(json.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 };
 </script>

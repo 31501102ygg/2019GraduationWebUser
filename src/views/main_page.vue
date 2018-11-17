@@ -12,16 +12,16 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto"  @click="removeActive">
                         <li class="nav-item ">
-                            <a class="nav-link active" ref="home" href="#/home">首页</a>
+                            <a :class="{'nav-link': 1===1,'active':'首页'===navActive}" ref="home" href="#/home" @click="navActive='首页'">首页</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="#/movie">电影</a>
+                            <a :class="{'nav-link': 1===1,'active':'电影'===navActive}" href="#/movie" @click="navActive='电影'">电影</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="#/">影评</a>
+                            <a :class="{'nav-link': 1===1,'active':'影评'===navActive}" href="#/" @click="navActive='影评'">影评</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a :class="{'nav-link': 1===1,'dropdown-toggle':1===1,'active':'影评'===navActive}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="navActive='收藏'">
                                 收藏
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown" >
@@ -106,7 +106,8 @@ export default {
   },
   data() {
     return { 
-        user_name: "ygg"
+        user_name: "ygg",
+        navActive: "首页"
         }
   },
   methods:{
