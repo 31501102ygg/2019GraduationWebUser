@@ -67,8 +67,10 @@
             <hr>
             <div class="row">
                 <div class="col" v-for="hotmovie in hotmovies" v-bind:key="hotmovie.id">
-                    <img class="img-fluid" :src="hotmovie.imgUrl" alt="">
-                    <span>{{hotmovie.name}}</span>
+                    <div style="height:290px;overflow:hidden">
+                        <img class="img-fluid" :src="hotmovie.imgUrl" alt="">
+                    </div>
+                    <p style="margin-top:5px">{{hotmovie.name}}</p>
                 </div>
             </div>
         </div>
@@ -100,9 +102,11 @@
         <div class="container clearfix">
             <hr>
             <div class="row">
-                <div class="col" v-for="movie in newMovies" v-bind:key="movie.id">
-                    <img class="img-fluid" :src="movie.imgUrl" alt="">
-                    <span>{{movie.name}}</span>
+                <div class="col-lg" v-for="movie in newMovies" v-bind:key="movie.id">
+                    <div style="height:290px;overflow:hidden">
+                        <img class="img-fluid" :src="movie.imgUrl" alt="">
+                    </div>
+                    <p style="margin-top:5px">{{movie.name}}</p>
                 </div>
             </div>
         </div>
@@ -177,7 +181,7 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    },   
+    },
     loadHotMovies() {
       let data = {
         pageNum: this.activeHotMoviePage,

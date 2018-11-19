@@ -10,7 +10,7 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto"  @click="removeActive">
+                    <ul class="navbar-nav mr-auto" @click="removeActive">
                         <li class="nav-item ">
                             <a :class="{'nav-link': 1===1,'active':'首页'===navActive}" ref="home" href="#/home" @click="navActive='首页'">首页</a>
                         </li>
@@ -24,15 +24,15 @@
                             <a :class="{'nav-link': 1===1,'dropdown-toggle':1===1,'active':'影评'===navActive}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="navActive='收藏'">
                                 收藏
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#/store/movie">电影</a>
                                 <a class="dropdown-item" href="#/store/review">影评</a>
                             </div>
                         </li>
                     </ul>
-                    <ul class="navbar-nav ml-auto "  @click="removeActive">
+                    <ul class="navbar-nav ml-auto " @click="removeActive">
                         <li class="nav-item ">
-                            <a class="nav-link" href="javascript:void(0);">登陆</a>
+                            <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#loginModal">登陆</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="javascript:void(0);">注册</a>
@@ -96,26 +96,97 @@
             <!--/.Copyright-->
 
         </footer>
+        <!-- 登陆模态框 Modal -->
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">登陆</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="col-md-10">
+                                    <div class="input-group input-group-lg">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-lg">账号</span>
+                                        </div>
+                                        <input type="text" v-model="login_form.username" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="请输入账号">
+                                    </div>
+                                    <div class="input-group input-group-lg my-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-lg">密码</span>
+                                        </div>
+                                        <input type="password" v-model="login_form.password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="请输入密码">
+                                    </div>
+                                    <button type="button" ref="login_button" class="btn btn-primary btn-lg btn-block" @click="login">登陆</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
+import qs from "qs";
+
+$(document).ready(function(){
+})
 export default {
   name: "main_page",
-  created(){
-      this.$router.push('/home')
+  created() {
+    this.$router.push("/home");
   },
   data() {
-    return { 
-        user_name: "ygg",
-        navActive: "首页"
-        }
+    return {
+      user_name: "ygg",
+      user_role: "normal",
+      navActive: "首页",
+      loginDisable: "able",
+      login_form: {
+        username: "",
+        password: ""
+      }
+    };
   },
-  methods:{
-    navSelect(e){
-        console.log(e.target)
+  methods: {
+    navSelect(e) {
+      console.log(e.target);
     },
-    removeActive(){
-        this.$refs.home.classList.remove('active')
+    removeActive() {
+      this.$refs.home.classList.remove("active");
+    },
+    login() {
+      this.$refs.login_button.setAttribute("disabled", "true");
+      this.$axios
+        .post("/login", qs.stringify(this.login_form))
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          this.$refs.login_button.removeAttribute("disabled");
+          if (json.code === "ACK") {
+            this.$parent.alert("success");
+            sessionStorage.setItem("TOKEN", json.data.token);
+            this.user_name = this.login_form.username;
+            this.user_role = json.data.role;
+            this.$refs.login_button.classList.remove("disabled");
+            $("#loginModal").modal("hide");
+          } else {
+              $("#alert").alert()
+          }
+        })
+        .catch(error => {
+          this.$refs.login_button.removeAttribute("disabled");
+          console.log(error);
+        });
     }
   }
 };
@@ -125,10 +196,10 @@ export default {
 .movie-navbar .nav-link {
   color: white;
 }
-footer{
-    color: white
+footer {
+  color: white;
 }
-.footer-link{
-    color: white;
+.footer-link {
+  color: white;
 }
 </style>

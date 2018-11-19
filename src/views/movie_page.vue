@@ -37,34 +37,46 @@
       </div>
 
       <div class="container clearfix">
-        <div class="row">
-          <div class="col" v-for="movie in movies.movies1" v-bind:key="movie.id">
-            <img class="img-fluid" :src="movie.imgUrl" alt="">
-            <span>{{movie.name}}</span>
+        <div class="row justify-content-start">
+          <div class="col-lg-1"></div>
+          <div class="col-lg-2" v-for="movie in movies.movies1" v-bind:key="movie.id">
+            <div style="height:230px">
+              <img class="img-fluid" :src="movie.imgUrl" alt="">
+            </div>
+            <p style="margin-top:5px">{{movie.name}}</p>
           </div>
         </div>
       </div>
       <div class="container clearfix">
-        <div class="row">
-          <div class="col" v-for="movie in movies.movies2" v-bind:key="movie.id">
-            <img class="img-fluid" :src="movie.imgUrl" alt="">
-            <span>{{movie.name}}</span>
+        <div class="row justify-content-start">
+          <div class="col-lg-1"></div>
+          <div class="col-lg-2" v-for="movie in movies.movies2" v-bind:key="movie.id">
+            <div style="height:230px">
+              <img class="img-fluid" :src="movie.imgUrl" alt="">
+            </div>
+            <p style="margin-top:5px">{{movie.name}}</p>
           </div>
         </div>
       </div>
       <div class="container clearfix">
-        <div class="row">
-          <div class="col" v-for="movie in movies.movies3" v-bind:key="movie.id">
-            <img class="img-fluid" :src="movie.imgUrl" alt="">
-            <span>{{movie.name}}</span>
+        <div class="row justify-content-start">
+          <div class="col-lg-1"></div>
+          <div class="col-lg-2" v-for="movie in movies.movies3" v-bind:key="movie.id">
+            <div style="height:230px">
+              <img class="img-fluid" :src="movie.imgUrl" alt="">
+            </div>
+            <p style="margin-top:5px">{{movie.name}}</p>
           </div>
         </div>
       </div>
       <div class="container clearfix">
-        <div class="row">
-          <div class="col" v-for="movie in movies.movies4" v-bind:key="movie.id">
-            <img class="img-fluid" :src="movie.imgUrl" alt="">
-            <span>{{movie.name}}</span>
+        <div class="row justify-content-start">
+          <div class="col-lg-1"></div>
+          <div class="col-lg-2" v-for="movie in movies.movies4" v-bind:key="movie.id">
+            <div style="height:230px">
+              <img class="img-fluid" :src="movie.imgUrl" alt="">
+            </div>
+            <p style="margin-top:5px">{{movie.name}}</p>
           </div>
         </div>
       </div>
@@ -111,59 +123,11 @@ export default {
             imgUrl:
               "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
             name: "1221212"
-          },
-          {
-            id: 2,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 3,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 4,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 5,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
           }
         ],
         movies2: [
           {
             id: 1,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 2,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 3,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 4,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 5,
             imgUrl:
               "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
             name: "1221212"
@@ -175,59 +139,11 @@ export default {
             imgUrl:
               "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
             name: "1221212"
-          },
-          {
-            id: 2,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 3,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 4,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 5,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
           }
         ],
         movies4: [
           {
             id: 1,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 2,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 3,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 4,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
-          },
-          {
-            id: 5,
             imgUrl:
               "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
             name: "1221212"
@@ -265,13 +181,13 @@ export default {
       this.$options.methods.searchMovie.bind(this)();
     },
     preClick() {
-      this.pagination.currentPage = this.pagination.currentPage-1
-      this.searchForm.pageNum = this.pagination.currentPage
+      this.pagination.currentPage = this.pagination.currentPage - 1;
+      this.searchForm.pageNum = this.pagination.currentPage;
       this.$options.methods.searchMovie.bind(this)();
     },
     nextClick() {
-      this.pagination.currentPage = this.pagination.currentPage+1
-      this.searchForm.pageNum = this.pagination.currentPage
+      this.pagination.currentPage = this.pagination.currentPage + 1;
+      this.searchForm.pageNum = this.pagination.currentPage;
       this.$options.methods.searchMovie.bind(this)();
     },
     itemClick(item) {
@@ -287,14 +203,18 @@ export default {
             ? this.pagination.currentPage -
               Math.floor(this.pagination.pageRange / 2)
             : 1;
-        if((this.pagination.startPage+this.pagination.pageRange)>this.pagination.totalPage){
-          this.pagination.startPage = this.pagination.totalPage-this.pagination.pageRange+1
+        if (
+          this.pagination.startPage + this.pagination.pageRange >
+          this.pagination.totalPage
+        ) {
+          this.pagination.startPage =
+            this.pagination.totalPage - this.pagination.pageRange + 1;
         }
         this.pagination.endPage =
-          this.pagination.startPage + this.pagination.pageRange-1;
+          this.pagination.startPage + this.pagination.pageRange - 1;
       } else {
         this.pagination.startPage = 1;
-        this.pagination.endPage = this.pagination.totalPage-1;
+        this.pagination.endPage = this.pagination.totalPage;
       }
       this.pagination.page_item.splice(0);
       for (
