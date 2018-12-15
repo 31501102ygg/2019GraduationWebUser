@@ -12,11 +12,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import solid from '@fortawesome/fontawesome-free-solid'
 import regular from '@fortawesome/fontawesome-free-regular'
 import brands from '@fortawesome/fontawesome-free-brands'
+import VueCropper from 'vue-cropperjs';
 
 library.add(solid)
 library.add(regular)
 library.add(brands)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('vue-cropper',VueCropper)
 
 Vue.config.productionTip = false
 Vue.prototype.GLOBAL = global_;
