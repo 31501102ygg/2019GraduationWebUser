@@ -31,8 +31,8 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto " @click="removeActive">
-                        <li class="nav-item ">
-                            <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#loginModal">登陆</a>
+                        <li class="nav-item " >
+                            <a class="nav-link" disabled="true" ref="login" href="javascript:void(0);" data-toggle="modal" data-target="#loginModal" v-if="login_show">登陆</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="javascript:void(0);">注册</a>
@@ -137,12 +137,12 @@
 <script>
 import qs from "qs";
 
-$(document).ready(function(){
-})
+$(document).ready(function() {});
 export default {
   name: "main_page",
   created() {
     this.$router.push("/home");
+    this.login_show = sessionStorage.getItem("TOKEN")==null
   },
   data() {
     return {
@@ -153,7 +153,8 @@ export default {
       login_form: {
         username: "",
         password: ""
-      }
+      },
+      login_show:true
     };
   },
   methods: {
@@ -173,14 +174,16 @@ export default {
         .then(json => {
           this.$refs.login_button.removeAttribute("disabled");
           if (json.code === "ACK") {
-            this.$parent.alert("success");
+            this.$parent.alert("success", json.message);
             sessionStorage.setItem("TOKEN", json.data.token);
             this.user_name = this.login_form.username;
             this.user_role = json.data.role;
             this.$refs.login_button.classList.remove("disabled");
             $("#loginModal").modal("hide");
+            this.$refs.login.setAttribute("disabled","true")
+            this.login_show=false;
           } else {
-              $("#alert").alert()
+            this.$parent.alert("danger", json.message);
           }
         })
         .catch(error => {

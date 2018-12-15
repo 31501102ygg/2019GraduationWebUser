@@ -39,7 +39,7 @@
       <div class="container clearfix">
         <div class="row justify-content-start">
           <div class="col-lg-1"></div>
-          <div class="col-lg-2" v-for="movie in movies.movies1" v-bind:key="movie.id">
+          <div class="col-lg-2" v-for="movie in movies.movies1" v-bind:key="movie.id" @click="turnToMovieInfo(movie.id)">
             <div style="height:230px">
               <img class="img-fluid" :src="movie.imgUrl" alt="">
             </div>
@@ -50,7 +50,7 @@
       <div class="container clearfix">
         <div class="row justify-content-start">
           <div class="col-lg-1"></div>
-          <div class="col-lg-2" v-for="movie in movies.movies2" v-bind:key="movie.id">
+          <div class="col-lg-2" v-for="movie in movies.movies2" v-bind:key="movie.id" @click="turnToMovieInfo(movie.id)">
             <div style="height:230px">
               <img class="img-fluid" :src="movie.imgUrl" alt="">
             </div>
@@ -61,7 +61,7 @@
       <div class="container clearfix">
         <div class="row justify-content-start">
           <div class="col-lg-1"></div>
-          <div class="col-lg-2" v-for="movie in movies.movies3" v-bind:key="movie.id">
+          <div class="col-lg-2" v-for="movie in movies.movies3" v-bind:key="movie.id" @click="turnToMovieInfo(movie.id)">
             <div style="height:230px">
               <img class="img-fluid" :src="movie.imgUrl" alt="">
             </div>
@@ -72,7 +72,7 @@
       <div class="container clearfix">
         <div class="row justify-content-start">
           <div class="col-lg-1"></div>
-          <div class="col-lg-2" v-for="movie in movies.movies4" v-bind:key="movie.id">
+          <div class="col-lg-2" v-for="movie in movies.movies4" v-bind:key="movie.id" @click="turnToMovieInfo(movie.id)">
             <div style="height:230px">
               <img class="img-fluid" :src="movie.imgUrl" alt="">
             </div>
@@ -257,6 +257,9 @@ export default {
             this.movies.movies4 = movies.slice(15, movies.length);
           }
         });
+    },
+    turnToMovieInfo(movieId){
+      this.$router.push({path:'/movie_info',query:{movieId:movieId}});
     }
   }
 };
