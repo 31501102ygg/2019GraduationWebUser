@@ -90,7 +90,7 @@
     </div>
     <div class="row m-2">
       <h5>所在地：</h5>
-      <v-distpicker></v-distpicker>
+      <v-distpicker @selected="addressSelect"></v-distpicker>
     </div>
     <div class="row m-2">
       <h5>个性签名：</h5>
@@ -213,7 +213,12 @@ export default {
       user: {},
       imgSrc: "",
       cropImg: "",
-      cropImgName: ""
+      cropImgName: "",
+      location:{
+        province:"",
+        city:"",
+        area:""
+      }
     };
   },
   methods: {
@@ -288,6 +293,10 @@ export default {
           this.user = json.data;
           console.log(this.user);
         });
+    },
+    addressSelect(object){
+      this.user.location = object.area.code;
+      console.log(object)
     }
   }
 };
