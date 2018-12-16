@@ -146,8 +146,8 @@ export default {
   },
   data() {
     return {
-      user_name: "ygg",
-      user_role: "normal",
+      user_name: "",
+      user_role: "",
       navActive: "首页",
       loginDisable: "able",
       login_form: {

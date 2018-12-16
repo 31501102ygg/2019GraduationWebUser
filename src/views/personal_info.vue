@@ -22,7 +22,7 @@
       <h5>头像：</h5>
       <div style="display: grid">
         <img
-          src="https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_headerImg/h1.jpg"
+          :src="user.headerImgUrl"
           alt=""
           style="width:150px;height:150px"
         >
@@ -34,7 +34,72 @@
         >更换头像</button>
       </div>
     </div>
+    <div
+      class="row m-2"
+      style="display:flex;"
+    >
+      <h5>性别：</h5>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orderBy"
+          id="sex-man"
+          value="0"
+          v-model="user.sex"
+          checked
+        >
+        <label
+          class="form-check-label"
+          for="sex-man"
+        >
+          男生
+        </label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="orderBy"
+          id="sex-woman"
+          value="1"
+          v-model="user.sex"
+        >
+        <label
+          class="form-check-label"
+          for="sex-woman"
+        >
+          女生
+        </label>
+      </div>
+    </div>
 
+    <div class="row m-2">
+      <h5>电话：</h5>
+      <input
+        type="text"
+        :value="user.phoneNumber"
+      >
+    </div>
+    <div class="row m-2">
+      <h5>工作：</h5>
+      <input
+        type="text"
+        :value="user.occupation"
+      >
+    </div>
+    <div class="row m-2">
+      <h5>所在地：</h5>
+      <v-distpicker></v-distpicker>
+    </div>
+    <div class="row m-2">
+      <h5>个性签名：</h5>
+      <textarea
+        class="form-control"
+        :value="user.personalitySignature"
+        rows="3"
+      ></textarea>
+    </div>
     <div
       class="modal fade bd-example-modal-lg"
       id="headerImgExchange"
@@ -77,7 +142,11 @@
                       :background="true"
                       :rotatable="true"
                       :src="imgSrc"
-                      alt="Source Image"
+                      :cropBoxResizable="false"
+                      :cropmove="cropImage"
+                      :ready="cropImage"
+                      :zoom="cropImage"
+                      alt="请上传图片"
                       :img-style="{ 'width': '300px', 'height': '300px' }"
                     >
                     </vue-cropper>
@@ -94,15 +163,9 @@
                   <img
                     :src="cropImg"
                     style="width: 200px; height: 200px; border: 1px solid gray"
-                    alt="Cropped Image"
+                    alt="头像预览"
                   />
-                  <div>
-                    <button
-                      class="btn btn-secondary"
-                      @click="cropImage"
-                      v-if="imgSrc != ''"
-                      style="margin-right: 40px;"
-                    >截取</button>
+                  <div class="my-2">
                     <button
                       class="btn btn-secondary"
                       @click="rotate"
@@ -112,6 +175,7 @@
                 </div>
                 <div class="modal-footer">
                   <button
+                    ref="closeModal"
                     type="button"
                     class="btn btn-secondary"
                     data-dismiss="modal"
@@ -119,6 +183,7 @@
                   <button
                     type="button"
                     class="btn btn-primary"
+                    @click="uploadImg"
                   >保存更改</button>
                 </div>
               </div>
@@ -126,6 +191,7 @@
           </div>
 
         </div>
+
       </div>
     </div>
   </div>
@@ -134,22 +200,28 @@
 <script>
 export default {
   name: "personal_info",
-  create() {},
+  created() {
+    //设置请求头
+    this.$axios.defaults.headers.common[
+      "Authorization"
+    ] = sessionStorage.getItem("TOKEN");
+
+    this.$options.methods.getUserInfo.bind(this)();
+  },
   data() {
     return {
-      user: {
-        username: "ygg1111",
-        nickname: "乌龟滑翔"
-      },
+      user: {},
       imgSrc: "",
-      cropImg: ""
+      cropImg: "",
+      cropImgName: ""
     };
   },
   methods: {
     setImage(e) {
       const file = e.target.files[0];
+      this.cropImgName = file.name;
       if (!file.type.includes("image/")) {
-        alert("Please select an image file");
+        alert("请上传图片文件");
         return;
       }
       if (typeof FileReader === "function") {
@@ -161,7 +233,7 @@ export default {
         };
         reader.readAsDataURL(file);
       } else {
-        alert("Sorry, FileReader API not supported");
+        alert("浏览器不支持FileReader方法");
       }
     },
     cropImage() {
@@ -171,6 +243,51 @@ export default {
     rotate() {
       // guess what this does :)
       this.$refs.cropper.rotate(90);
+      this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+    },
+    uploadImg() {
+      var form = new FormData();
+      var img = this.cropImg;
+      var imgName = this.cropImgName;
+      var file = this.$options.methods.dataURLtoFile(img, imgName);
+      form.append("file", file);
+      this.$axios
+        .post("/upload/img/movie", form)
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .then(json => {
+          json = json.data;
+          this.$refs.closeModal.click();
+          this.user.headerImgUrl = json.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    dataURLtoFile(dataurl, filename) {
+      var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+    getUserInfo() {
+      var url = "/user/info?username=" + this.$parent.user_name;
+      this.$axios
+        .get(url)
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .then(json => {
+          json = json.data;
+          this.user = json.data;
+          console.log(this.user);
+        });
     }
   }
 };

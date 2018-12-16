@@ -13,11 +13,13 @@ import solid from '@fortawesome/fontawesome-free-solid'
 import regular from '@fortawesome/fontawesome-free-regular'
 import brands from '@fortawesome/fontawesome-free-brands'
 import VueCropper from 'vue-cropperjs';
+import VDistpicker from 'v-distpicker'
 
 library.add(solid)
 library.add(regular)
 library.add(brands)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('v-distpicker', VDistpicker)
 Vue.component('vue-cropper',VueCropper)
 
 Vue.config.productionTip = false
