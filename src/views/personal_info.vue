@@ -1,21 +1,30 @@
 <template>
   <div class="container">
-    <div class="row m-2">
+    <div
+      class="row m-3"
+      style="display:flex;align-items: center"
+    >
       <h2>个人基本信息</h2>
     </div>
-    <div class="row m-2">
+    <div
+      class="row m-2"
+      style="display:flex;align-items: center"
+    >
       <h5>账号：</h5>
       <input
         type="text"
         disabled="true"
-        :value="user.username"
+        v-model="user.username"
       >
     </div>
-    <div class="row m-2">
+    <div
+      class="row m-2"
+      style="display:flex;align-items: center"
+    >
       <h5>昵称：</h5>
       <input
         type="text"
-        :value="user.nickname"
+        v-model="user.nickname"
       >
     </div>
     <div class="row m-2">
@@ -74,29 +83,58 @@
       </div>
     </div>
 
-    <div class="row m-2">
+    <div
+      class="row m-2"
+      style="display:flex;align-items: center"
+    >
       <h5>电话：</h5>
       <input
         type="text"
-        :value="user.phoneNumber"
+        v-model="user.phoneNumber"
       >
     </div>
-    <div class="row m-2">
+    <div
+      class="row m-2"
+      style="display:flex;align-items: center"
+    >
+      <h5>邮件：</h5>
+      <input
+        type="text"
+        v-model="user.email"
+      >
+    </div>
+    <div
+      class="row m-2"
+      style="display:flex;align-items: center"
+    >
       <h5>工作：</h5>
       <input
         type="text"
-        :value="user.occupation"
+        v-model="user.occupation"
       >
     </div>
-    <div class="row m-2">
+    <div
+      class="row m-2"
+      style="display:flex;align-items: center"
+    >
       <h5>所在地：</h5>
-      <v-distpicker @selected="addressSelect"></v-distpicker>
+      <v-distpicker
+        :province="location.province"
+        :city="location.city"
+        :area="location.area"
+        @province="changeLocation"
+        @city="changeLocation"
+        @selected="addressSelect"
+      ></v-distpicker>
     </div>
-    <div class="row m-2">
+    <div
+      class="row m-2"
+      style="display:flex;align-items: center"
+    >
       <h5>个性签名：</h5>
       <textarea
         class="form-control"
-        :value="user.personalitySignature"
+        v-model="user.personalitySignature"
         rows="3"
       ></textarea>
     </div>
@@ -194,12 +232,19 @@
 
       </div>
     </div>
+    <div class="row m-2">
+      <button
+        class="btn btn-danger"
+        @click="modifySubmit"
+      >保存修改</button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "personal_info",
+  inject:['reload'],
   created() {
     //设置请求头
     this.$axios.defaults.headers.common[
@@ -214,10 +259,10 @@ export default {
       imgSrc: "",
       cropImg: "",
       cropImgName: "",
-      location:{
-        province:"",
-        city:"",
-        area:""
+      location: {
+        province: "",
+        city: "",
+        area: ""
       }
     };
   },
@@ -255,6 +300,13 @@ export default {
       var img = this.cropImg;
       var imgName = this.cropImgName;
       var file = this.$options.methods.dataURLtoFile(img, imgName);
+      var fileSize = file.size;
+      //检查头像图片的大小是否小于3MB
+      if (fileSize > 3 * 1024 * 1024) {
+        console.log("图像超过3MB，无法上传");
+        return;
+      }
+      console.log("file size:" + file.size);
       form.append("file", file);
       this.$axios
         .post("/upload/img/movie", form)
@@ -264,10 +316,13 @@ export default {
         .then(json => {
           json = json.data;
           this.$refs.closeModal.click();
+          this.$parent.user.headerImgUrl = json.data;
           this.user.headerImgUrl = json.data;
+          this.$parent.$parent.alert("success", json.message);
         })
         .catch(error => {
           console.log(error);
+          this.$parent.$parent.alert("danger", error);
         });
     },
     dataURLtoFile(dataurl, filename) {
@@ -282,7 +337,7 @@ export default {
       return new File([u8arr], filename, { type: mime });
     },
     getUserInfo() {
-      var url = "/user/info?username=" + this.$parent.user_name;
+      var url = "/user/info?username=" + this.$parent.user.username;
       this.$axios
         .get(url)
         .then(res => {
@@ -291,12 +346,60 @@ export default {
         .then(json => {
           json = json.data;
           this.user = json.data;
-          console.log(this.user);
+          this.$options.methods.regionExchange.bind(this)(this.user.location);
         });
     },
-    addressSelect(object){
+    addressSelect(object) {
       this.user.location = object.area.code;
-      console.log(object)
+      console.log(object);
+    },
+    regionExchange(id) {
+      let regionId = id;
+      let splitRegion = /(\d{2})(\d{2})/.exec(regionId);
+      let provinceId = splitRegion[1] * 10000;
+      let cityId = provinceId + splitRegion[2] * 100;
+      var location = this.GLOBAL.BASE_REGIONS[0].children;
+      for (let region of location) {
+        if (region.id === provinceId) {
+          location = region;
+          break;
+        }
+      }
+      this.location.province = location.name;
+      if(provinceId === cityId)
+        return
+      for (let region of location.children) {
+        if (region.id === cityId) {
+          location = region;
+          break;
+        }
+      }
+      this.location.city = location.name;
+      if(regionId === cityId)
+        return
+      for (let region of location.children) {
+        if (region.id === regionId) {
+          location = region;
+          break;
+        }
+      }
+      this.location.area = location.name;
+    },
+    changeLocation(e){
+      if(e.code!=null)
+        this.user.location = e.code
+    },
+    modifySubmit() {
+      this.$axios
+        .post("/user/update", this.user)
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .then(json => {
+          json = json.data;
+          this.$parent.$parent.alert("success", json.message);
+          this.reload()
+        });
     }
   }
 };

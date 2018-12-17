@@ -10,7 +10,7 @@ export default {
   methods: {
     alert(type,message) {
       var alert =
-        '<div class=" alert alert-dismissible fade show" style="position:absolute;left:30%;right:30%;z-index:1" id="alert" role="alert"> </div>' ;
+        '<div class=" alert alert-dismissible fade show" style="position:absolute;left:30%;right:30%;z-index:1100" id="alert" role="alert"> </div>' ;
       if (type === "success") {
         $("#app").prepend(alert);
         $("#alert").addClass("alert-success")

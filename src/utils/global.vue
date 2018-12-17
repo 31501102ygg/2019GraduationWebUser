@@ -74,10 +74,12 @@ const Film_Language = [
   { value: "俄语", label: "俄语" },
   { value: "印度尼西亚语", label: "印度尼西亚语" }
 ];
+const BASE_REGIONS = [];
 export default {
   BASE_URL,
   Film_Type,
   Film_Country,
-  Film_Language
+  Film_Language,
+  BASE_REGIONS
 };
 </script>
