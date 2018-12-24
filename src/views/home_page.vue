@@ -1,116 +1,219 @@
 <template>
-    <div>
-        <div id="carouselExampleControls" class="carousel slide carousel-fade" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="d-block w-100" src="https://static.runoob.com/images/mix/img_fjords_wide.jpg" alt="First slide">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>第一张幻灯片标签</h5>
-                        <p>...</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100" src="https://static.runoob.com/images/mix/img_nature_wide.jpg" alt="Second slide">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>第二张幻灯片标签</h5>
-                        <p>...</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="d-block w-100" src="https://static.runoob.com/images/mix/img_mountains_wide.jpg" alt="Third slide">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>第三张幻灯片标签</h5>
-                        <p>...</p>
-                    </div>
-                </div>
+  <div>
+    <div
+      id="carouselExampleControls"
+      class="carousel slide carousel-fade"
+      data-ride="carousel"
+    >
+      <ol class="carousel-indicators">
+        <li
+          data-target="#carouselExampleIndicators"
+          data-slide-to="0"
+          class="active"
+        ></li>
+        <li
+          data-target="#carouselExampleIndicators"
+          data-slide-to="1"
+        ></li>
+        <li
+          data-target="#carouselExampleIndicators"
+          data-slide-to="2"
+        ></li>
+      </ol>
+      <div class="container slide-container">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img
+              class="slide d-block w-100"
+              src="https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2535547808.jpg"
+              alt="First slide"
+            >
+            <div class="slide-text  carousel-caption d-none d-md-block">
+              <h2>李茶的姑妈</h2>
+              <p>...</p>
             </div>
-            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-        <div class="container clearfix">
-            <hr>
-            <div class="hot-movie" style="display:flex;align-items: center">
-                <span style="margin-right:auto">最近热门电影</span>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="javascript:void(0);" aria-label="Previous" @click="getHotPre">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                        <li v-for="item in pageIndex" :key="item.id" :class="{'page-item':1===1,active:item.id === activeHotMoviePage}">
-                            <a class="page-link" href="javascript:void(0);" @click="reloadHotMovies(item.id)">{{item.id}}</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="javascript:void(0);" aria-label="Next" @click="getHotNext">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+          </div>
+          <div class="carousel-item">
+            <img
+              class="slide d-block w-100"
+              src="https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2413274720.jpg"
+              alt="Second slide"
+            >
+            <div class="slide-text carousel-caption d-none d-md-block">
+              <h2>龙猫</h2>
+              <p>...</p>
             </div>
-        </div>
-        <div class="container clearfix">
-            <hr>
-            <div class="row">
-                <div class="col" v-for="hotmovie in hotmovies" v-bind:key="hotmovie.id">
-                    <div style="height:290px;overflow:hidden">
-                        <img class="img-fluid" :src="hotmovie.imgUrl" alt="">
-                    </div>
-                    <p style="margin-top:5px">{{hotmovie.name}}</p>
-                </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              class="slide d-block w-100"
+              src="https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2540362544.jpg"
+              alt="Third slide"
+            >
+            <div class="slide-text  carousel-caption d-none d-md-block">
+              <h2>海王</h2>
+              <p>...</p>
             </div>
+          </div>
         </div>
-        <div class="container clearfix">
-            <hr>
-            <div class="new-movie" style="display:flex;align-items: center">
-                <span style="margin-right:auto">最新电影</span>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="javascript:void(0);" aria-label="Previous" @click="getPre">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                        <li v-for="item in pageIndex" :key="item.id" :ref="item.id" :class="{'page-item':1===1,active:item.id === activeNewMoviePage}">
-                            <a class="page-link" href="javascript:void(0);" @click="reloadNewestMovies(item.id)">{{item.id}}</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="javascript:void(0);" aria-label="Next" @click="getNext">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-        <div class="container clearfix">
-            <hr>
-            <div class="row">
-                <div class="col-lg" v-for="movie in newMovies" v-bind:key="movie.id">
-                    <div style="height:290px;overflow:hidden">
-                        <img class="img-fluid" :src="movie.imgUrl" alt="">
-                    </div>
-                    <p style="margin-top:5px">{{movie.name}}</p>
-                </div>
-            </div>
-        </div>
+      </div>
+      <a
+        class="carousel-control-prev"
+        href="#carouselExampleControls"
+        role="button"
+        data-slide="prev"
+      >
+        <span
+          class="carousel-control-prev-icon"
+          aria-hidden="true"
+        ></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a
+        class="carousel-control-next"
+        href="#carouselExampleControls"
+        role="button"
+        data-slide="next"
+      >
+        <span
+          class="carousel-control-next-icon"
+          aria-hidden="true"
+        ></span>
+        <span class="sr-only">Next</span>
+      </a>
     </div>
+    <div class="container clearfix">
+      <hr>
+      <div
+        class="hot-movie"
+        style="display:flex;align-items: center"
+      >
+        <span style="margin-right:auto">最近热门电影</span>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="javascript:void(0);"
+                aria-label="Previous"
+                @click="getHotPre"
+              >
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li
+              v-for="item in pageIndex"
+              :key="item.id"
+              :class="{'page-item':1===1,active:item.id === activeHotMoviePage}"
+            >
+              <a
+                class="page-link"
+                href="javascript:void(0);"
+                @click="reloadHotMovies(item.id)"
+              >{{item.id}}</a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="javascript:void(0);"
+                aria-label="Next"
+                @click="getHotNext"
+              >
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div class="container clearfix">
+      <hr>
+      <div class="row">
+        <div
+          class="col"
+          v-for="hotmovie in hotmovies"
+          v-bind:key="hotmovie.id"
+        >
+          <div style="height:290px;overflow:hidden">
+            <img
+              class="img-fluid"
+              :src="hotmovie.imgUrl"
+              alt=""
+            >
+          </div>
+          <p style="margin-top:5px">{{hotmovie.name}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="container clearfix">
+      <hr>
+      <div
+        class="new-movie"
+        style="display:flex;align-items: center"
+      >
+        <span style="margin-right:auto">最新电影</span>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="javascript:void(0);"
+                aria-label="Previous"
+                @click="getPre"
+              >
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li
+              v-for="item in pageIndex"
+              :key="item.id"
+              :ref="item.id"
+              :class="{'page-item':1===1,active:item.id === activeNewMoviePage}"
+            >
+              <a
+                class="page-link"
+                href="javascript:void(0);"
+                @click="reloadNewestMovies(item.id)"
+              >{{item.id}}</a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="javascript:void(0);"
+                aria-label="Next"
+                @click="getNext"
+              >
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div class="container clearfix">
+      <hr>
+      <div class="row">
+        <div
+          class="col-lg"
+          v-for="movie in newMovies"
+          v-bind:key="movie.id"
+        >
+          <div style="height:290px;overflow:hidden">
+            <img
+              class="img-fluid"
+              :src="movie.imgUrl"
+              alt=""
+            >
+          </div>
+          <p style="margin-top:5px">{{movie.name}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -211,4 +314,15 @@ export default {
 .hot-movie > span {
   float: left;
 }
+
+.slide {
+  height: 500px;
+}
+
+#carouselExampleControls{
+    background-color:#adcad3; 
+}
+/* .slide-text{
+    color: black;
+} */
 </style>
