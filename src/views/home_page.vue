@@ -1,22 +1,22 @@
 <template>
   <div>
     <div
-      id="carouselExampleControls"
+      id="movieSlide"
       class="carousel slide carousel-fade"
       data-ride="carousel"
     >
       <ol class="carousel-indicators">
         <li
-          data-target="#carouselExampleIndicators"
+          data-target="#movieSlide"
           data-slide-to="0"
           class="active"
         ></li>
         <li
-          data-target="#carouselExampleIndicators"
+          data-target="#movieSlide"
           data-slide-to="1"
         ></li>
         <li
-          data-target="#carouselExampleIndicators"
+          data-target="#movieSlide"
           data-slide-to="2"
         ></li>
       </ol>
@@ -25,41 +25,41 @@
           <div class="carousel-item active">
             <img
               class="slide d-block w-100"
-              src="https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2535547808.jpg"
+              :src="slideList[0].img"
               alt="First slide"
             >
             <div class="slide-text  carousel-caption d-none d-md-block">
-              <h2>李茶的姑妈</h2>
-              <p>...</p>
+              <h2>{{slideList[0].title}}</h2>
+              <p>{{slideList[0].content}}</p>
             </div>
           </div>
           <div class="carousel-item">
             <img
               class="slide d-block w-100"
-              src="https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2413274720.jpg"
+              :src="slideList[1].img"
               alt="Second slide"
             >
             <div class="slide-text carousel-caption d-none d-md-block">
-              <h2>龙猫</h2>
-              <p>...</p>
+              <h2>{{slideList[1].title}}</h2>
+              <p>{{slideList[1].content}}</p>
             </div>
           </div>
           <div class="carousel-item">
             <img
               class="slide d-block w-100"
-              src="https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2540362544.jpg"
+              :src="slideList[2].img"
               alt="Third slide"
             >
             <div class="slide-text  carousel-caption d-none d-md-block">
-              <h2>海王</h2>
-              <p>...</p>
+              <h2>{{slideList[2].title}}</h2>
+              <p>{{slideList[2].content}}</p>
             </div>
           </div>
         </div>
       </div>
       <a
         class="carousel-control-prev"
-        href="#carouselExampleControls"
+        href="#movieSlide"
         role="button"
         data-slide="prev"
       >
@@ -71,7 +71,7 @@
       </a>
       <a
         class="carousel-control-next"
-        href="#carouselExampleControls"
+        href="#movieSlide"
         role="button"
         data-slide="next"
       >
@@ -221,19 +221,75 @@ var index = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
 export default {
   name: "home_page",
   created() {
+    this.$options.methods.getSlideList.bind(this)();
     this.$options.methods.loadNewestMovies.bind(this)();
     this.$options.methods.loadHotMovies.bind(this)();
   },
+  mounted() {},
   data() {
     return {
       pageIndex: index,
       activeHotMoviePage: 1,
       activeNewMoviePage: 1,
+      slideList: [
+        {
+          id: 1,
+          title: "龙猫",
+          content: "日本龙猫",
+          img:
+            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2413274720.jpg",
+          state: 1,
+          createDate: "2018-12-26T13:13:15.000+0000",
+          updateDate: "2018-12-25T15:09:38.000+0000",
+          createTimeString: null,
+          updateTimeString: null
+        },
+        {
+          id: 2,
+          title: "李茶的姑妈",
+          content: "李茶的姑妈",
+          img:
+            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2535547808.jpg",
+          state: 1,
+          createDate: "2018-12-26T13:13:15.000+0000",
+          updateDate: null,
+          createTimeString: null,
+          updateTimeString: null
+        },
+        {
+          id: 3,
+          title: "海王",
+          content: "海王",
+          img:
+            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2540362544.jpg",
+          state: 1,
+          createDate: "2018-12-26T13:13:14.000+0000",
+          updateDate: null,
+          createTimeString: null,
+          updateTimeString: null
+        }
+      ],
       hotmovies: [],
       newMovies: []
     };
   },
   methods: {
+    //首页幻灯片方法区
+    getSlideList() {
+      this.$axios
+        .get("slide/list")
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .then(json => {
+          json = json.data;
+          console.log(json.data);
+          if (json.code === "ACK") this.slideList = json.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //最新电影方法区
     getNext() {
       this.activeNewMoviePage =
@@ -319,8 +375,8 @@ export default {
   height: 500px;
 }
 
-#carouselExampleControls{
-    background-color:#adcad3; 
+#movieSlide {
+  background-color: #adcad3;
 }
 /* .slide-text{
     color: black;
