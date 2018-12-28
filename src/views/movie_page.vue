@@ -120,33 +120,29 @@ export default {
         movies1: [
           {
             id: 1,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
+            imgUrl:'',
+            name: ''
           }
         ],
         movies2: [
           {
             id: 1,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
+            imgUrl:'',
+            name: ''
           }
         ],
         movies3: [
           {
             id: 1,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
+            imgUrl:'',
+            name: ''
           }
         ],
         movies4: [
           {
             id: 1,
-            imgUrl:
-              "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p505238859.jpg",
-            name: "1221212"
+            imgUrl:'',
+            name: ''
           }
         ]
       },
