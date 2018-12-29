@@ -96,8 +96,27 @@
     >
       <h4>电影短评</h4>
     </div>
+    <div
+      class="row"
+      style="text-align:left;padding-left:15px"
+    >
+      <div class="list-group" style="width:100%">
+        <div
+          class="list-group-item list-group-item-action flex-column align-items-start"
+          style="margin-bottom:5px"
+          v-for="shortCommentary in shortCommentarys" 
+          :key="shortCommentary.id"
+        >
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{shortCommentary.username}}</h5>
+            <small>{{shortCommentary.score}}</small>
+          </div>
+          <p class="mb-1">{{shortCommentary.content}}</p>
+          <small>{{shortCommentary.createDateTimeString}}</small>
+        </div>
+      </div>
+    </div>
 
-    
   </div>
 </template>
 
@@ -106,13 +125,20 @@ export default {
   name: "movie_info",
   created() {
     this.movie_id = this.$route.query.movieId;
+    this.pageHelper.data=this.movie_id;
     this.$options.methods.getMovieById.bind(this)();
+    this.$options.methods.getMovieShortCommentarys.bind(this)();
   },
   data() {
     return {
       movie_id: 20,
       movie_score: 9.0,
       movie_year: 2018,
+      pageHelper:{
+        data:'',
+        pageNum:1,
+        pageSize:10
+      },
       movie_entity: [
         { id: 1, type_name: "导演：", value_name: "director" },
         { id: 2, type_name: "编剧：", value_name: "screenwriter" },
@@ -132,7 +158,8 @@ export default {
         { id: 8, type_name: "片长：", value_name: "sheetLength" },
         { id: 9, type_name: "外文名：", value_name: "foreignName" }
       ],
-      movie: {}
+      movie: {},
+      shortCommentarys:[]
     };
   },
   methods: {
@@ -148,12 +175,25 @@ export default {
             this.movie = json.data;
             this.movie_year = /\d+/.exec(this.movie.releaseTimeString)[0];
           } else {
-            this.$message.error(json.message);
+            this.$parent.alert("warning", json.message);
           }
         })
         .catch(error => {
           console.log(error);
         });
+    },
+    getMovieShortCommentarys(){
+      this.$axios.post("short/search/",this.pageHelper)
+      .then(res=>{return Promise.resolve(res.data)})
+      .then(json=>{
+        if(json.code==='ACK'){
+          this.shortCommentarys=json.data
+          console.log(json.data)
+        }else{ 
+            this.$parent.alert("warning", json.message);
+        }
+      })
+      .catch(error=>{console.log(error)})
     }
   }
 };

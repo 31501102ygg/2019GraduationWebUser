@@ -139,6 +139,7 @@
             :title="user.nickname"
           >
             <img
+              v-if="!login_show"
               style="border-radius:50%"
               :src="user.headerImgUrl"
               width="30"
