@@ -40,15 +40,15 @@
               >短评评分限制在1-10分之间</small>
             </div>
             <div class="form-group">
-              <label for="markCommentInput">Password</label>
-              <input
-                type="password"
+              <label for="markCommentInput">你的短评</label>
+              <textarea 
+                rows="5"
                 class="form-control"
                 id="markCommentInput"
                 aria-describedby="markComment"
-                placeholder="Password"
+                placeholder="输入你的短评"
                 v-model="vcontent"
-              >
+              ></textarea>
               <small
                 id="markComment"
                 class="form-text text-muted"
@@ -104,4 +104,7 @@ export default {
 };
 </script>
 <style scoped>
+.modal-body{
+  text-align: left;
+}
 </style>
