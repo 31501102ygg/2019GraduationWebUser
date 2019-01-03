@@ -39,41 +39,14 @@
           style="align-items:center"
         >
           <h1>{{movie_score.toFixed(1)}}</h1>
-          <font-awesome-icon
-            v-if="Math.round(movie_score/2)>=1"
-            class="text-warning"
-            :icon="['fas','star']"
-          />
-          <font-awesome-icon
-            v-if="Math.round(movie_score/2)>=2"
-            class="text-warning"
-            :icon="['fas','star']"
-          />
-          <font-awesome-icon
-            v-if="Math.round(movie_score/2)>=3"
-            class="text-warning"
-            :icon="['fas','star']"
-          />
-          <font-awesome-icon
-            v-if="Math.round(movie_score/2)>=4"
-            class="text-warning"
-            :icon="['fas','star']"
-          />
-          <font-awesome-icon
-            v-if="Math.round(movie_score/2)>=5"
-            class="text-warning"
-            :icon="['fas','star']"
-          />
-          <font-awesome-icon
-            v-if="Math.round(movie_score/2)<(movie_score/2)"
-            class="text-warning"
-            :icon="['fas','star-half']"
-          />
+          <stars :score="movie_score"></stars>
         </div>
         <div class="row">
           <button
             type="button"
             class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#markDialog"
           >打分</button>
         </div>
       </div>
@@ -100,44 +73,69 @@
       class="row"
       style="text-align:left;padding-left:15px"
     >
-      <div class="list-group" style="width:100%">
+      <div
+        class="list-group"
+        style="width:100%"
+      >
         <div
           class="list-group-item list-group-item-action flex-column align-items-start"
           style="margin-bottom:5px"
-          v-for="shortCommentary in shortCommentarys" 
+          v-for="shortCommentary in shortCommentarys"
           :key="shortCommentary.id"
         >
           <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{shortCommentary.username}}</h5>
-            <small>{{shortCommentary.score}}</small>
+            <div class="d-flex justify-content-start">
+              <h5 class="mb-1">{{shortCommentary.username}}</h5>
+              <stars
+                :score="shortCommentary.score"
+                style="margin-left:20px"
+              ></stars>
+            </div>
           </div>
           <p class="mb-1">{{shortCommentary.content}}</p>
           <small>{{shortCommentary.createDateTimeString}}</small>
         </div>
       </div>
     </div>
-
+    <mark-dialog
+      id="markDialog"
+      ref="mark"
+      :score="userShortCommentary.score"
+      :content="userShortCommentary.content"
+      v-on:submit="submitShortCommentary"
+      v-on:inputscore="watchScore"
+      v-on:inputcontent="watchContent"
+    ></mark-dialog>
   </div>
 </template>
 
 <script>
+import scoreStars from "../components/scoreStars.vue";
+import markDialog from "../components/movieInfo/markDialog.vue";
+
 export default {
   name: "movie_info",
+  inject: ["reload"],
+  components: {
+    stars: scoreStars,
+    "mark-dialog": markDialog
+  },
   created() {
     this.movie_id = this.$route.query.movieId;
-    this.pageHelper.data=this.movie_id;
+    this.pageHelper.data = this.movie_id;
+    this.userShortCommentary.movieId = this.movie_id;
     this.$options.methods.getMovieById.bind(this)();
     this.$options.methods.getMovieShortCommentarys.bind(this)();
   },
   data() {
     return {
       movie_id: 20,
-      movie_score: 9.0,
+      movie_score: 8.0,
       movie_year: 2018,
-      pageHelper:{
-        data:'',
-        pageNum:1,
-        pageSize:10
+      pageHelper: {
+        data: "",
+        pageNum: 1,
+        pageSize: 10
       },
       movie_entity: [
         { id: 1, type_name: "导演：", value_name: "director" },
@@ -159,7 +157,12 @@ export default {
         { id: 9, type_name: "外文名：", value_name: "foreignName" }
       ],
       movie: {},
-      shortCommentarys:[]
+      userShortCommentary: {
+        score: 0,
+        content: "",
+        movieId: 0
+      },
+      shortCommentarys: []
     };
   },
   methods: {
@@ -182,18 +185,53 @@ export default {
           console.log(error);
         });
     },
-    getMovieShortCommentarys(){
-      this.$axios.post("short/search/",this.pageHelper)
-      .then(res=>{return Promise.resolve(res.data)})
-      .then(json=>{
-        if(json.code==='ACK'){
-          this.shortCommentarys=json.data
-          console.log(json.data)
-        }else{ 
+    getMovieShortCommentarys() {
+      this.$axios
+        .post("short/search/", this.pageHelper)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          if (json.code === "ACK") {
+            this.shortCommentarys = json.data;
+            console.log(json.data);
+          } else {
             this.$parent.alert("warning", json.message);
-        }
-      })
-      .catch(error=>{console.log(error)})
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    watchScore(newVal) {
+      this.userShortCommentary.score = parseInt(newVal);
+    },
+    watchContent(newVal) {
+      this.userShortCommentary.content = newVal;
+    },
+    submitShortCommentary() {
+      this.$axios
+        .post("short/add/", this.userShortCommentary, {
+          headers: {
+            Authorization: sessionStorage.getItem("TOKEN")
+          }
+        })
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          console.log(json);
+          if (json.code === "ACK") {
+            this.$parent.$parent.alert("success", json.message);
+          } else {
+            this.$parent.$parent.alert("warning", json.message);
+          }
+          this.$refs.mark.$refs.modalCancel.click();
+          this.reload();
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
