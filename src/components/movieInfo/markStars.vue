@@ -14,17 +14,17 @@
 </template>
 <script>
 export default {
-  created(){
+  created() {
     this.$options.methods.init.bind(this)(this.score);
   },
-  props:{
-    score:Number
+  props: {
+    score: Number
   },
   data() {
     return {
-      needInit: true,
-      message: "垃圾",
+      message: "",
       mscore: 0,
+      ensureScore: 0,
       icon_list: [
         {
           index: 0,
@@ -54,23 +54,22 @@ export default {
     message(newVal, oldVal) {
       this.$emit("changeMessage", newVal);
     },
-    mscore(newVal, oldVal) {
+    ensureScore(newVal, oldVal) {
+      newVal = newVal * 2;
       this.$emit("changeScore", newVal);
     }
   },
   methods: {
-    init(number){
-      if(number===undefined){
-      this.mscore = 0;
-      }else{
-      this.mscore = number;
+    init(number) {
+      if (number === undefined) {
+        this.mscore = 0;
+      } else {
+        this.mscore = number;
       }
-      console.log(this.mscore)
-      number = Math.floor(number/2)
-      this.$options.methods.starPadding.bind(this)(number-1)
+      number = Math.floor(number / 2);
+      this.$options.methods.starPadding.bind(this)(number - 1);
     },
     starPadding(index) {
-      this.needInit = true;
       this.message = this.message_list[index];
       for (let i = 0; i < 5; i++) {
         if (i <= index) {
@@ -81,19 +80,27 @@ export default {
       }
     },
     starInit() {
-      if (!this.needInit) return;
-      for (let i = 0; i < 5; i++) this.icon_list[i].style = ["far", "star"];
-      this.message = '';
+      for (let i = 0; i < 5; i++) {
+        if (i < this.ensureScore) {
+          this.icon_list[i].style = ["fas", "star"];
+        } else {
+          this.icon_list[i].style = ["far", "star"];
+        }
+      }
+      if (this.ensureScore === 0) {
+        this.message = "";
+      } else {
+        this.message = this.message_list[this.ensureScore - 1];
+      }
     },
     starEnsure(index) {
-      this.needInit = false;
-      this.mscore = (index + 1)*2;
+      this.ensureScore = index + 1;
     }
   }
 };
 </script>
 <style scoped>
-.text-warning{
-  margin: 2px
+.text-warning {
+  margin: 2px;
 }
 </style>

@@ -5,6 +5,7 @@ import HomePage from '@/views/home_page'
 import MoviePage from '@/views/movie_page'
 import MovieInfoPage from '@/views/movie_info_page'
 import PersonalInfoPage from '@/views/personal_info'
+import CommentaryEdit from '@/views/commentary_edit'
 Vue.use(Router)
 
 export default new Router({
@@ -28,6 +29,10 @@ export default new Router({
       {
         path: 'personal_info',
         component: PersonalInfoPage
+      },
+      {
+        path: 'commentary_edit',
+        component: CommentaryEdit
       }
     ]
     }

@@ -14,7 +14,21 @@ import regular from '@fortawesome/fontawesome-free-regular'
 import brands from '@fortawesome/fontawesome-free-brands'
 import VueCropper from 'vue-cropperjs';
 import VDistpicker from 'v-distpicker'
+// Require Froala Editor js file.
+require('froala-editor/js/froala_editor.pkgd.min')
+//引入中文语言包
+require('froala-editor/js/languages/zh_cn')
+// Require Froala Editor css files.
+require('froala-editor/css/froala_editor.pkgd.min.css')
+require('font-awesome/css/font-awesome.css')
+require('froala-editor/css/froala_style.min.css')
 
+// Import and use Vue Froala lib.
+// 文本编辑器
+import VueFroala from 'vue-froala-wysiwyg'
+Vue.use(VueFroala)
+
+//亚马逊icon
 library.add(solid)
 library.add(regular)
 library.add(brands)
