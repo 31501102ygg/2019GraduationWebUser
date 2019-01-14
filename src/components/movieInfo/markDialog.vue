@@ -26,14 +26,21 @@
           <div class="container-fluid">
             <div class="form-group">
               <label for="markNumberInput">评分</label>
-              <input
+              <!-- <input
                 type="text"
                 class="form-control"
                 id="markNumberInput"
                 aria-describedby="markNumber"
                 placeholder="mark"
                 v-model="vscore"
-              >
+              > -->
+              <mark-star
+                :score="vscore"
+                v-on:changeMessage="changeMessage"
+                v-on:changeScore="changeScore"
+              ></mark-star>
+              <!-- <p>{{vscore}}</p> -->
+              <p>{{markMessage}}</p>
               <small
                 id="markNumber"
                 class="form-text text-muted"
@@ -41,7 +48,7 @@
             </div>
             <div class="form-group">
               <label for="markCommentInput">你的短评</label>
-              <textarea 
+              <textarea
                 rows="5"
                 class="form-control"
                 id="markCommentInput"
@@ -76,7 +83,12 @@
 
 </template>
 <script>
+import markStars from "./markStars.vue";
+
 export default {
+  components: {
+    "mark-star": markStars
+  },
   props: {
     id: String,
     score: Number,
@@ -85,7 +97,8 @@ export default {
   data() {
     return {
       vscore: this.score,
-      vcontent: this.content
+      vcontent: this.content,
+      markMessage: ""
     };
   },
   watch: {
@@ -99,12 +112,18 @@ export default {
   methods: {
     submit() {
       this.$emit("submit");
+    },
+    changeMessage(markMessage) {
+      this.markMessage = markMessage;
+    },
+    changeScore(score) {
+      this.vscore = score;
     }
   }
 };
 </script>
 <style scoped>
-.modal-body{
+.modal-body {
   text-align: left;
 }
 </style>

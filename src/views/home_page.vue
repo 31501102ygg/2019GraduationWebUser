@@ -135,6 +135,7 @@
           class="col"
           v-for="hotmovie in hotmovies"
           v-bind:key="hotmovie.id"
+          @click="turnToMovieInfo(hotmovie.id)"
         >
           <div style="height:290px;overflow:hidden">
             <img
@@ -201,6 +202,7 @@
           class="col-lg"
           v-for="movie in newMovies"
           v-bind:key="movie.id"
+          @click="turnToMovieInfo(movie.id)"
         >
           <div style="height:290px;overflow:hidden">
             <img
@@ -345,6 +347,9 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+        turnToMovieInfo(movieId){
+      this.$router.push({path:'/movie_info',query:{movieId:movieId}});
     }
   }
 };

@@ -117,7 +117,7 @@ export default {
   name: "movie_info",
   inject: ["reload"],
   components: {
-    stars: scoreStars,
+    "stars": scoreStars,
     "mark-dialog": markDialog
   },
   created() {
@@ -130,7 +130,7 @@ export default {
   data() {
     return {
       movie_id: 20,
-      movie_score: 8.0,
+      movie_score: 9.2,
       movie_year: 2018,
       pageHelper: {
         data: "",
