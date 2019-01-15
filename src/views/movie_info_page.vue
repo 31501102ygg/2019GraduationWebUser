@@ -47,7 +47,12 @@
             class="btn btn-primary"
             data-toggle="modal"
             data-target="#markDialog"
-          >打分</button>
+          >短评</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="termToCommentaryEdit"
+          >影评</button>
         </div>
       </div>
     </div>
@@ -129,7 +134,7 @@ export default {
   },
   data() {
     return {
-      movie_id: 20,
+      movie_id: 0,
       movie_score: 9.2,
       movie_year: 2018,
       pageHelper: {
@@ -232,10 +237,16 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    termToCommentaryEdit(){
+      this.$router.push({path:'/commentary_edit',query:{movieId:this.movie_id}});
     }
   }
 };
 </script>
 
 <style scoped>
+.row button{
+  margin-right: 20px
+}
 </style>

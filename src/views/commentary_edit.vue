@@ -5,12 +5,12 @@
       id="which_movie"
     >
       <img
-        :src="movie_info.img"
+        :src="movie_info.imgUrl"
         alt="电影图片"
       >
       <div>
-        <div style="line-height:50px"><a :href="movie_info.src">{{movie_info.title}}</a></div>
-        <div><p>{{movie_info.content}}</p></div>
+        <div style="line-height:50px"><a :href="movie_info.src">{{movie_info.name}}</a></div>
+        <div><p>{{movie_info.simpleInfo}}</p></div>
       </div>
     </div>
 
@@ -29,13 +29,18 @@
 </template>
 <script>
 export default {
+  created(){
+    this.movie_id = this.$route.query.movieId;
+    this.$options.methods.getMovieSimpleInfo.bind(this)(this.movie_id)
+  },
   data() {
     return {
+      movie_id:0,
       movie_info:{
-        "img":'https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_img/p1014542496.jpg',
+        "imgUrl":'https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_img/p1014542496.jpg',
         "src":'http://localhost:8080/#/movie_info?movieId=183',
-        "title":'拯救大兵瑞恩',
-        "content":'导演 饶晓志 主演 陈建斌 / 任素汐 / 中国大陆 / 8.1分(425103评价)'
+        "name":'拯救大兵瑞恩',
+        "simpleInfo":'导演 饶晓志 主演 陈建斌 / 任素汐 / 中国大陆 / 8.1分(425103评价)'
       },
       title:'',
       config: {
@@ -53,7 +58,24 @@ export default {
       model: ''
     };
   },
-  methods: {}
+  methods: {
+    getMovieSimpleInfo(){
+      var url = this.GLOBAL.BASE_URL+"movie/info/simple?movieId="+this.movie_id
+      console.log(url)
+      this.$axios.get(url)
+      .then(res=>{return Promise.resolve(res.data)})
+      .then(json=>{
+        console.log(json)
+        if(json.code==='ACK'){
+        this.movie_info=json.data
+        this.movie_info.src = this.GLOBAL.BASE_WEB_URL+'movie_info?movieId='+this.movie_id
+        }else{
+          console.log(json.message)
+        }
+      })
+      .catch(error=>{console.log(error)})
+    }
+  }
 };
 </script>
 
