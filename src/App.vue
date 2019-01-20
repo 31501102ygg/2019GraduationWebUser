@@ -34,7 +34,6 @@ export default {
       }
 
       setTimeout(function(){
-        console.log("timeout")
         $(".alert").alert("close")
       },2000)
     }
