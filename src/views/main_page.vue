@@ -51,7 +51,7 @@
             <li class="nav-item ">
               <a
                 :class="{'nav-link': 1===1,'active':'影评'===navActive}"
-                href="#/"
+                href="#/commentary"
                 @click="navActive='影评'"
               >影评</a>
             </li>
