@@ -80,7 +80,7 @@
                 <p
                   class="mb-1"
                   style="text-align: left;"
-                >{{commentary.content}}</p>
+                >{{commentary.pureContent}}</p>
               </div>
             </div>
           </div>
@@ -99,6 +99,9 @@ import scoreStars from "../components/scoreStars.vue";
 import pageNavigation from "../components/pageNavigation.vue";
 
 export default {
+  created(){
+    this.$options.methods.search.bind(this)(1);
+  },
   components: {
     stars: scoreStars,
     "page-navigation": pageNavigation
@@ -147,7 +150,7 @@ export default {
         }
       ],
       pagination: {
-        totalPage: 2,
+        totalPage: 0,
         pageRange: 7,
         currentPage: 1
       },
@@ -156,12 +159,24 @@ export default {
   },
   methods: {
     search(val) {
-      console.log("search" + val);
+      let url = this.GLOBAL.BASE_URL+"long/get?page="+val
+      this.$axios.get(url)
+      .then(res=>{return Promise.resolve(res.data)})
+      .then(json=>{
+        console.log(json)
+        if(json.code==='ACK'){
+        this.commentaryList=json.data
+        this.pagination.currentPage = Math.ceil(json.data.length/10);
+        console.log(this.pagination.currentPage)
+        }else{
+          console.log(json.message)
+        }
+      })
+      .catch(error=>{console.log(error)})
     },
     changeCurrentPage(val) {
       this.pagination.currentPage = parseInt(val);
       this.$options.methods.search.bind(this)(val);
-      console.log(this.pagination.currentPage);
     },
     changeType(val){
       this.type = val;
