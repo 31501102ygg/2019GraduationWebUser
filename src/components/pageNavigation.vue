@@ -43,7 +43,7 @@
 </template>
 <script>
 export default {
-  created(){
+  created() {
     this.$options.methods.initPageItem.bind(this)();
   },
   data() {
@@ -62,6 +62,10 @@ export default {
   watch: {
     currentPage(newVal, oldVal) {
       this.$emit("currentPage", newVal);
+    },
+    total(newVal, oldVal) {
+      this.totalPage = this.total;
+      this.$options.methods.initPageItem.bind(this)();
     }
   },
   methods: {

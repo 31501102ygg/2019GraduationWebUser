@@ -150,7 +150,7 @@ export default {
         }
       ],
       pagination: {
-        totalPage: 0,
+        totalPage: 2,
         pageRange: 7,
         currentPage: 1
       },
@@ -163,11 +163,9 @@ export default {
       this.$axios.get(url)
       .then(res=>{return Promise.resolve(res.data)})
       .then(json=>{
-        console.log(json)
         if(json.code==='ACK'){
         this.commentaryList=json.data
-        this.pagination.currentPage = Math.ceil(json.data.length/10);
-        console.log(this.pagination.currentPage)
+        this.pagination.totalPage = Math.ceil(json.data.length/10);
         }else{
           console.log(json.message)
         }
