@@ -7,6 +7,8 @@ import MovieInfoPage from '@/views/movie_info_page'
 import PersonalInfoPage from '@/views/personal_info'
 import CommentaryEdit from '@/views/commentary_edit'
 import CommentaryPage from '@/views/commentary_page'
+import CommentaryInfo from '@/views/commentary_info'
+
 Vue.use(Router)
 
 export default new Router({
@@ -38,6 +40,10 @@ export default new Router({
       {
         path: 'commentary',
         component: CommentaryPage
+      },
+      {
+        path: 'commentary_info',
+        component: CommentaryInfo
       }
     ]
     }

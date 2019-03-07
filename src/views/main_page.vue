@@ -316,7 +316,7 @@ export default {
   },
   created() {
     this.$router.push("/home");
-    this.$options.methods.getAllRegions.bind(this)();
+    // this.$options.methods.getAllRegions.bind(this)();
     if(sessionStorage.getItem("TOKEN")){
         this.login_show= false
         //设置请求头

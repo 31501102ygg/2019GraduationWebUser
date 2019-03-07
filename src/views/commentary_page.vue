@@ -33,7 +33,7 @@
         type="button"
         :class="{'btn':true, 'btn-outline-primary':type===1,'btn-primary':type===2}"
         @click="changeType(2)"
-      style="margin-left:10px;"
+        style="margin-left:10px;"
       >大众影评</button>
     </div>
     <div style="margin:16px;">
@@ -56,20 +56,57 @@
             </div>
             <div class="col-10">
               <div
-                class="d-flex justify-content-start"
+                class="d-flex justify-content-between"
                 style="align-items:center"
               >
-                <img
-                  class="user-img"
-                  :src=commentary.userUrl
-                  alt="用户头像"
+                <div
+                  class="d-flex justify-content-start"
+                  style="align-items:center"
                 >
-                <p style="margin-top: 1rem;margin-left:5px">{{commentary.userName}}</p>
-                <stars
-                  :score=commentary.score
-                  style="margin-left:5px"
-                ></stars>
-                <small style="margin-left:5px">{{commentary.time}}</small>
+                  <img
+                    class="user-img"
+                    :src=commentary.userUrl
+                    alt="用户头像"
+                  >
+                  <p style="margin-top: 1rem;margin-left:5px">{{commentary.userName}}</p>
+                  <stars
+                    :score=commentary.score
+                    style="margin-left:5px"
+                  ></stars>
+                  <small style="margin-left:5px">{{commentary.time}}</small>
+                </div>
+                <div
+                  class="d-flex justify-content-end"
+                  style="align-items:center"
+                >
+                  <a
+                    href="javascript:void(0)"
+                    @click="clickLike(commentary)"
+                  >
+                    <font-awesome-icon
+                      :icon="['far','thumbs-up']"
+                      v-if="!commentary.like"
+                    />
+                    <font-awesome-icon
+                      :icon="['fas','thumbs-up']"
+                      v-if="commentary.like"
+                    />
+                  </a>
+                  <small style="padding-right:30px">123</small>
+                  <a
+                    href="javascript:void(0)"
+                    @click="clickCollect(commentary)"
+                  >
+                    <font-awesome-icon
+                      :icon="['far','heart']"
+                      v-if="!commentary.collection"
+                    />
+                    <font-awesome-icon
+                      :icon="['fas','heart']"
+                      v-if="commentary.collection"
+                    />
+                  </a>
+                </div>
               </div>
               <div class="d-flex justify-content-start">
                 <a href="#">
@@ -99,7 +136,7 @@ import scoreStars from "../components/scoreStars.vue";
 import pageNavigation from "../components/pageNavigation.vue";
 
 export default {
-  created(){
+  created() {
     this.$options.methods.search.bind(this)(1);
   },
   components: {
@@ -120,6 +157,8 @@ export default {
           content:
             "学长他就像我生命中的灵感，他让我了解爱的积极意义，他就像是让我一直前进的动力， 其实这部在内地12年上映的泰国校园爱情小清新电影，每次想到学生时期的那份纯纯爱恋，总是会把它再刷一遍，遍遍的感触都不同，就像那个她永远在我心裡，但却越来越模糊。 校园+淡淡初恋+死党... ",
           score: 9,
+          like: false,
+          collection: false,
           time: "2018-10-01 12:15:11"
         },
         {
@@ -133,6 +172,8 @@ export default {
           content:
             "学长他就像我生命中的灵感，他让我了解爱的积极意义，他就像是让我一直前进的动力， 其实这部在内地12年上映的泰国校园爱情小清新电影，每次想到学生时期的那份纯纯爱恋，总是会把它再刷一遍，遍遍的感触都不同，就像那个她永远在我心裡，但却越来越模糊。 校园+淡淡初恋+死党... ",
           score: 9,
+          like: false,
+          collection: false,
           time: "2018-10-01 12:15:11"
         },
         {
@@ -146,6 +187,8 @@ export default {
           content:
             "学长他就像我生命中的灵感，他让我了解爱的积极意义，他就像是让我一直前进的动力， 其实这部在内地12年上映的泰国校园爱情小清新电影，每次想到学生时期的那份纯纯爱恋，总是会把它再刷一遍，遍遍的感触都不同，就像那个她永远在我心裡，但却越来越模糊。 校园+淡淡初恋+死党... ",
           score: 9,
+          like: false,
+          collection: false,
           time: "2018-10-01 12:15:11"
         }
       ],
@@ -154,30 +197,86 @@ export default {
         pageRange: 7,
         currentPage: 1
       },
-      type:1
+      type: 1
     };
   },
   methods: {
     search(val) {
-      let url = this.GLOBAL.BASE_URL+"long/get?page="+val
-      this.$axios.get(url)
-      .then(res=>{return Promise.resolve(res.data)})
-      .then(json=>{
-        if(json.code==='ACK'){
-        this.commentaryList=json.data
-        this.pagination.totalPage = Math.ceil(json.data.length/10);
-        }else{
-          console.log(json.message)
-        }
-      })
-      .catch(error=>{console.log(error)})
+      //设置请求头
+      this.$axios.defaults.headers.common[
+        "Authorization"
+      ] = sessionStorage.getItem("TOKEN");
+      let url = this.GLOBAL.BASE_URL + "long/get?page=" + val;
+      this.$axios
+        .get(url)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          if (json.code === "ACK") {
+            console.log(json.data);
+            this.commentaryList = json.data;
+            this.pagination.totalPage = Math.ceil(json.data.length / 10);
+          } else {
+            console.log(json.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     changeCurrentPage(val) {
       this.pagination.currentPage = parseInt(val);
       this.$options.methods.search.bind(this)(val);
     },
-    changeType(val){
+    changeType(val) {
       this.type = val;
+    },
+    clickLike(commentary) {
+      if (sessionStorage.getItem("TOKEN") == null) {
+        return;
+      }
+      var url = this.GLOBAL.BASE_URL;
+      if (commentary.like  === true) {
+        url = url + "long/like/cancel?id=" + commentary.id;
+      } else {
+        url = url + "long/like?id=" + commentary.id;
+      }
+      this.$options.methods.getRequest.bind(this)(url);
+      commentary.like = !commentary.like;
+    },
+    clickCollect(commentary) {
+      if (sessionStorage.getItem("TOKEN") == null) return;
+      var url = this.GLOBAL.BASE_URL;
+      if (commentary.collection === true) {
+        url = url + "long/collection/cancel?id=" + commentary.id;
+      } else {
+        url = url + "long/collection/add?id=" + commentary.id;
+      }
+      this.$options.methods.getRequest.bind(this)(url);
+      commentary.collection = !commentary.collection;
+    },
+    getRequest(url) {
+      //设置请求头
+      this.$axios.defaults.headers.common[
+        "Authorization"
+      ] = sessionStorage.getItem("TOKEN");
+      this.$axios
+        .get(url)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(data => {
+          if (data.code === "ACK") {
+            console.log(data.data)
+            return data.data;
+          } else {
+            console.log(data);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
