@@ -115,8 +115,8 @@
 </template>
 
 <script>
-import scoreStars from "../components/scoreStars.vue";
-import markDialog from "../components/movieInfo/markDialog.vue";
+import scoreStars from "../../components/scoreStars.vue";
+import markDialog from "../../components/movieInfo/markDialog.vue";
 
 export default {
   name: "movie_info",

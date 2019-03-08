@@ -2,12 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Main from '@/views/main_page'
 import HomePage from '@/views/home_page'
-import MoviePage from '@/views/movie_page'
-import MovieInfoPage from '@/views/movie_info_page'
-import PersonalInfoPage from '@/views/personal_info'
-import CommentaryEdit from '@/views/commentary_edit'
-import CommentaryPage from '@/views/commentary_page'
-import CommentaryInfo from '@/views/commentary_info'
+import MoviePage from '@/views/movie/movie_page'
+import MovieInfoPage from '@/views/movie/movie_info_page'
+import PersonalInfoPage from '@/views/personal/personal_info'
+import CommentaryEdit from '@/views/commentary/commentary_edit'
+import CommentaryPage from '@/views/commentary/commentary_page'
+import CommentaryInfo from '@/views/commentary/commentary_info'
+import CollectionCommentary from '@/views/collection/collection_commentary'
+import CollectionMovie from '@/views/collection/collection_movie'
 
 Vue.use(Router)
 
@@ -44,6 +46,14 @@ export default new Router({
       {
         path: 'commentary_info',
         component: CommentaryInfo
+      },
+      {
+        path: 'store/review',
+        component: CollectionCommentary
+      },
+      {
+        path: 'store/movie',
+        component: CollectionMovie
       }
     ]
     }

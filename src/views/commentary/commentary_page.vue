@@ -132,65 +132,20 @@
   </div>
 </template>
 <script>
-import scoreStars from "../components/scoreStars.vue";
-import pageNavigation from "../components/pageNavigation.vue";
+import scoreStars from "../../components/scoreStars.vue";
+import pageNavigation from "../../components/pageNavigation.vue";
 
 export default {
   created() {
     this.$options.methods.search.bind(this)(1);
   },
   components: {
-    stars: scoreStars,
+    "stars": scoreStars,
     "page-navigation": pageNavigation
   },
   data() {
     return {
       commentaryList: [
-        {
-          id: 1,
-          movieUrl:
-            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_img/p1188042816.jpg",
-          userUrl:
-            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_headerImg/h1.jpg",
-          userName: "ygg123",
-          title: "于心的那份青涩",
-          content:
-            "学长他就像我生命中的灵感，他让我了解爱的积极意义，他就像是让我一直前进的动力， 其实这部在内地12年上映的泰国校园爱情小清新电影，每次想到学生时期的那份纯纯爱恋，总是会把它再刷一遍，遍遍的感触都不同，就像那个她永远在我心裡，但却越来越模糊。 校园+淡淡初恋+死党... ",
-          score: 9,
-          like: false,
-          collection: false,
-          time: "2018-10-01 12:15:11"
-        },
-        {
-          id: 2,
-          movieUrl:
-            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_img/p1188042816.jpg",
-          userUrl:
-            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_headerImg/h1.jpg",
-          userName: "ygg123",
-          title: "于心的那份青涩",
-          content:
-            "学长他就像我生命中的灵感，他让我了解爱的积极意义，他就像是让我一直前进的动力， 其实这部在内地12年上映的泰国校园爱情小清新电影，每次想到学生时期的那份纯纯爱恋，总是会把它再刷一遍，遍遍的感触都不同，就像那个她永远在我心裡，但却越来越模糊。 校园+淡淡初恋+死党... ",
-          score: 9,
-          like: false,
-          collection: false,
-          time: "2018-10-01 12:15:11"
-        },
-        {
-          id: 3,
-          movieUrl:
-            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_img/p1188042816.jpg",
-          userUrl:
-            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_headerImg/h1.jpg",
-          userName: "ygg123",
-          title: "于心的那份青涩",
-          content:
-            "学长他就像我生命中的灵感，他让我了解爱的积极意义，他就像是让我一直前进的动力， 其实这部在内地12年上映的泰国校园爱情小清新电影，每次想到学生时期的那份纯纯爱恋，总是会把它再刷一遍，遍遍的感触都不同，就像那个她永远在我心裡，但却越来越模糊。 校园+淡淡初恋+死党... ",
-          score: 9,
-          like: false,
-          collection: false,
-          time: "2018-10-01 12:15:11"
-        }
       ],
       pagination: {
         totalPage: 2,
@@ -233,28 +188,30 @@ export default {
       this.type = val;
     },
     clickLike(commentary) {
+      let flag = commentary.like
+      commentary.like = !commentary.like;
       if (sessionStorage.getItem("TOKEN") == null) {
         return;
       }
       var url = this.GLOBAL.BASE_URL;
-      if (commentary.like  === true) {
+      if (flag  === true) {
         url = url + "long/like/cancel?id=" + commentary.id;
       } else {
         url = url + "long/like?id=" + commentary.id;
       }
       this.$options.methods.getRequest.bind(this)(url);
-      commentary.like = !commentary.like;
     },
     clickCollect(commentary) {
+      let flag = commentary.collection
+      commentary.collection = !commentary.collection;
       if (sessionStorage.getItem("TOKEN") == null) return;
       var url = this.GLOBAL.BASE_URL;
-      if (commentary.collection === true) {
+      if (flag === true) {
         url = url + "long/collection/cancel?id=" + commentary.id;
       } else {
         url = url + "long/collection/add?id=" + commentary.id;
       }
       this.$options.methods.getRequest.bind(this)(url);
-      commentary.collection = !commentary.collection;
     },
     getRequest(url) {
       //设置请求头

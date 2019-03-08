@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-primary movie-navbar">
-      <div class="container">
+      <div class="container header">
         <a
           class="navbar-brand"
           href="#"
@@ -102,6 +102,8 @@
               <a
                 class="nav-link"
                 href="javascript:void(0);"
+                data-toggle="modal"
+                data-target="#registerModal"
               >注册</a>
             </li>
             <li class="nav-item dropdown">
@@ -301,6 +303,102 @@
         </div>
       </div>
     </div>
+
+    <!-- 注册模态框 Modal -->
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog"
+        role="document"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5
+              class="modal-title"
+              id="exampleModalLabel"
+            >注册</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row justify-content-center">
+                <div class="col-md-10">
+                  <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                      <span
+                        class="input-group-text"
+                        id="inputGroup-sizing-lg"
+                      >账号</span>
+                    </div>
+                    <input
+                      type="text"
+                      v-model="register_form.username"
+                      class="form-control"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-lg"
+                      placeholder="请输入账号"
+                    >
+                  </div>
+                  <div class="input-group input-group-lg my-3">
+                    <div class="input-group-prepend">
+                      <span
+                        class="input-group-text"
+                        id="inputGroup-sizing-lg"
+                      >密码</span>
+                    </div>
+                    <input
+                      type="password"
+                      v-model="register_form.password"
+                      class="form-control"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-lg"
+                      placeholder="请输入密码"
+                    >
+                  </div>
+                  <div class="input-group input-group-lg my-3">
+                    <div class="input-group-prepend">
+                      <span
+                        class="input-group-text"
+                        id="inputGroup-sizing-lg"
+                      >确认密码</span>
+                    </div>
+                    <input
+                      type="password"
+                      v-model="register_form.repeat"
+                      class="form-control"
+                      aria-label="Sizing example input"
+                      aria-describedby="inputGroup-sizing-lg"
+                      placeholder="请再次输入密码"
+                    >
+                  </div>
+                  <button
+                    type="button"
+                    ref="register_button"
+                    class="btn btn-primary btn-lg btn-block"
+                    @click="register"
+                  >注册</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -309,28 +407,28 @@ import qs from "qs";
 $(document).ready(function() {});
 export default {
   name: "main_page",
-  provide(){
+  provide() {
     return {
-      reload:this.reload
-    }
+      reload: this.reload
+    };
   },
   created() {
     this.$router.push("/home");
     // this.$options.methods.getAllRegions.bind(this)();
-    if(sessionStorage.getItem("TOKEN")){
-        this.login_show= false
-        //设置请求头
-            this.$axios.defaults.headers.common[
-            "Authorization"
-            ] = sessionStorage.getItem("TOKEN");
-        this.$options.methods.getUserInfo.bind(this)();
-    }else{
-        this.login_show = true
+    if (sessionStorage.getItem("TOKEN")) {
+      this.login_show = false;
+      //设置请求头
+      this.$axios.defaults.headers.common[
+        "Authorization"
+      ] = sessionStorage.getItem("TOKEN");
+      this.$options.methods.getUserInfo.bind(this)();
+    } else {
+      this.login_show = true;
     }
   },
   data() {
     return {
-      isRouterAlive:true,
+      isRouterAlive: true,
       user_name: "",
       user_role: "",
       navActive: "首页",
@@ -339,16 +437,21 @@ export default {
         username: "",
         password: ""
       },
-      login_show:true,
-      user:{}
+      register_form: {
+        username: "",
+        password: "",
+        repeat: ""
+      },
+      login_show: true,
+      user: {}
     };
   },
   methods: {
-    reload(){
-      this.isRouterAlive = false
-      this.$nextTick(function(){
-        this.isRouterAlive = true
-      })
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
     },
     navSelect(e) {
       console.log(e.target);
@@ -372,13 +475,13 @@ export default {
             this.user_role = json.data.role;
             this.$refs.login_button.classList.remove("disabled");
             $("#loginModal").modal("hide");
-            this.$refs.login.setAttribute("disabled","true");
+            this.$refs.login.setAttribute("disabled", "true");
             //设置请求头
             this.$axios.defaults.headers.common[
-            "Authorization"
+              "Authorization"
             ] = sessionStorage.getItem("TOKEN");
             this.$options.methods.getUserInfo.bind(this)();
-            this.login_show=false;
+            this.login_show = false;
           } else {
             this.$parent.alert("danger", json.message);
           }
@@ -388,45 +491,72 @@ export default {
           console.log(error);
         });
     },
-    getUserInfo(){
-        this.$axios.get("/user")
-        .then(res=>{
-            return Promise.resolve(res);
-        })
+    register() {
+      if(this.register_form.password != this.register_form.repeat){
+         this.$parent.alert("danger", "请确认密码");
+      }else{
+        this.$axios.post("user/register",{username:this.register_form.username,password:this.register_form.password})
+        .then(res=>{return Promise.resolve(res.data)})
         .then(json=>{
-            json = json.data
-            this.user = json.data
-            console.log(json)
+          if(json.code === "ACK"){
+            this.login_form.username = this.register_form.username;
+            this.login_form.password = this.register_form.password;
+            this.$options.methods.login.bind(this)();
+          }else{
+            this.$parent.alert("danger", json.message);
+          }
         })
-        .catch(error=>{
-            console.log(error)
-        })
+        .catch(error=>{console.log(error)})
+      }
     },
-    getAllRegions(){
-      this.$axios.get("/SRegion/listAll")
-      .then(res=>{
-        return Promise.resolve(res)
-      })
-      .then(json=>{
-        json = json.data
-        this.GLOBAL.BASE_REGIONS=json.data
-      })
-      .catch(error=>{
-        console.log(error)
-      })
+    getUserInfo() {
+      this.$axios
+        .get("/user")
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .then(json => {
+          json = json.data;
+          this.user = json.data;
+          console.log(json);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    getAllRegions() {
+      this.$axios
+        .get("/SRegion/listAll")
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .then(json => {
+          json = json.data;
+          this.GLOBAL.BASE_REGIONS = json.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
 </script>
 
 <style scoped>
+.header {
+  min-height: 5vh;
+}
 .movie-navbar .nav-link {
   color: white;
 }
 footer {
+  min-height: 15vh;
   color: white;
 }
 .footer-link {
   color: white;
+}
+.input-group-text{
+  width: 130px;
 }
 </style>

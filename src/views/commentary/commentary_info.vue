@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import scoreStars from "../components/scoreStars.vue";
+import scoreStars from "../../components/scoreStars.vue";
 
 export default {
   components: {
