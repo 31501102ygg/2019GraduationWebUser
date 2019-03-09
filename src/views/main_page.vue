@@ -499,6 +499,7 @@ export default {
         .then(res=>{return Promise.resolve(res.data)})
         .then(json=>{
           if(json.code === "ACK"){
+            $("#registerModal").modal("hide");
             this.login_form.username = this.register_form.username;
             this.login_form.password = this.register_form.password;
             this.$options.methods.login.bind(this)();
