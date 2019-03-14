@@ -4,9 +4,9 @@
       <div class="row">
         <div class="col-5">
           <div class="input-group m-3">
-            <input type="text" class="form-control" placeholder="电影名、导演、演员" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <input type="text" class="form-control" v-model="searchForm.keyword" placeholder="电影名、导演、演员" aria-label="Recipient's username" aria-describedby="button-addon2">
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary" type="button" id="button-addon2">搜索</button>
+              <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click="submitSearch">搜索</button>
             </div>
           </div>
         </div>
@@ -149,6 +149,7 @@ export default {
       searchForm: {
         pageNum: 1,
         pageSize: 20,
+        keyword:"",
         type: "",
         makeState: "",
         orderBy: 1
@@ -256,6 +257,9 @@ export default {
     },
     turnToMovieInfo(movieId){
       this.$router.push({path:'/movie_info',query:{movieId:movieId}});
+    },
+    submitSearch(){
+      this.$options.methods.searchMovie.bind(this)()
     }
   }
 };

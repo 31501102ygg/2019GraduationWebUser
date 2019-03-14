@@ -128,8 +128,16 @@
                 >个人信息</a>
                 <a
                   class="dropdown-item"
-                  href="#/message"
-                >消息</a>
+                  href="JavaScript:void(0)"
+                  v-if="user_power!='pro'"
+                  data-toggle="modal"
+                  data-target="#askDialog"
+                >专家申请</a>
+                <a
+                  class="dropdown-item"
+                  href="JavaScript:void(0)"
+                  @click="logout"
+                >退出</a>
               </div>
             </li>
           </ul>
@@ -399,14 +407,24 @@
         </div>
       </div>
     </div>
+    <ask-dialog
+      id="askDialog"
+      ref="ask"
+      v-on:message="changeMessage"
+      v-on:submit="upgradeProSubmit"
+    ></ask-dialog>
   </div>
 </template>
 <script>
 import qs from "qs";
+import askDialog from "../components/AskPro/askDialog.vue";
 
 $(document).ready(function() {});
 export default {
   name: "main_page",
+  components: {
+    "ask-dialog": askDialog
+  },
   provide() {
     return {
       reload: this.reload
@@ -431,6 +449,7 @@ export default {
       isRouterAlive: true,
       user_name: "",
       user_role: "",
+      user_power: "",
       navActive: "首页",
       loginDisable: "able",
       login_form: {
@@ -443,7 +462,8 @@ export default {
         repeat: ""
       },
       login_show: true,
-      user: {}
+      user: {},
+      askProMessage: {"content":""}
     };
   },
   methods: {
@@ -473,6 +493,7 @@ export default {
             sessionStorage.setItem("TOKEN", json.data.token);
             this.user_name = this.login_form.username;
             this.user_role = json.data.role;
+            this.user_power = json.data.power;
             this.$refs.login_button.classList.remove("disabled");
             $("#loginModal").modal("hide");
             this.$refs.login.setAttribute("disabled", "true");
@@ -491,23 +512,34 @@ export default {
           console.log(error);
         });
     },
+    logout() {
+      this.login_show = true;
+    },
     register() {
-      if(this.register_form.password != this.register_form.repeat){
-         this.$parent.alert("danger", "请确认密码");
-      }else{
-        this.$axios.post("user/register",{username:this.register_form.username,password:this.register_form.password})
-        .then(res=>{return Promise.resolve(res.data)})
-        .then(json=>{
-          if(json.code === "ACK"){
-            $("#registerModal").modal("hide");
-            this.login_form.username = this.register_form.username;
-            this.login_form.password = this.register_form.password;
-            this.$options.methods.login.bind(this)();
-          }else{
-            this.$parent.alert("danger", json.message);
-          }
-        })
-        .catch(error=>{console.log(error)})
+      if (this.register_form.password != this.register_form.repeat) {
+        this.$parent.alert("danger", "请确认密码");
+      } else {
+        this.$axios
+          .post("user/register", {
+            username: this.register_form.username,
+            password: this.register_form.password
+          })
+          .then(res => {
+            return Promise.resolve(res.data);
+          })
+          .then(json => {
+            if (json.code === "ACK") {
+              $("#registerModal").modal("hide");
+              this.login_form.username = this.register_form.username;
+              this.login_form.password = this.register_form.password;
+              this.$options.methods.login.bind(this)();
+            } else {
+              this.$parent.alert("danger", json.message);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
     },
     getUserInfo() {
@@ -529,13 +561,36 @@ export default {
       this.$axios
         .get("/SRegion/listAll")
         .then(res => {
-          return Promise.resolve(res);
+          return Promise.resolve(res.data);
         })
         .then(json => {
-          json = json.data;
-          this.GLOBAL.BASE_REGIONS = json.data;
+          console.log(json);
+          this.GLOBAL.BASE_REGIONS = json[0].children;
         })
         .catch(error => {
+          console.log(error);
+        });
+    },
+    changeMessage(val) {
+      console.log(val);
+      this.askProMessage.content = val;
+    },
+    upgradeProSubmit() {
+      this.$axios
+        .post("upgrade/add",qs.stringify(this.askProMessage))
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          this.$refs.ask.$refs.modalCancel.click();
+          if (json.code === "ACK") {
+            this.$parent.alert("success", json.message);
+          } else {
+            this.$parent.alert("danger", json.message);
+          }
+        })
+        .catch(error => {
+          this.$parent.alert("danger", "申请失败");
           console.log(error);
         });
     }
@@ -557,7 +612,7 @@ footer {
 .footer-link {
   color: white;
 }
-.input-group-text{
+.input-group-text {
   width: 130px;
 }
 </style>

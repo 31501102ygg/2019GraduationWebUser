@@ -6,7 +6,8 @@
           <input
             type="text"
             class="form-control"
-            placeholder="电影名"
+            v-model="searchForm.keyword"
+            placeholder="电影名、影评标题"
             aria-label="Recipient's username"
             aria-describedby="button-search"
           >
@@ -15,6 +16,7 @@
               class="btn btn-outline-secondary"
               type="button"
               id="button-search"
+              @click="search"
             >搜索</button>
           </div>
         </div>
@@ -26,15 +28,15 @@
     >
       <button
         type="button"
-        :class="{'btn':true, 'btn-outline-primary':type===2,'btn-primary':type===1}"
-        @click="changeType(1)"
-      >专家影评</button>
+        :class="{'btn':true, 'btn-outline-primary':searchForm.type===1,'btn-primary':searchForm.type===0}"
+        @click="changeType(0)"
+      >大众影评</button>
       <button
         type="button"
-        :class="{'btn':true, 'btn-outline-primary':type===1,'btn-primary':type===2}"
-        @click="changeType(2)"
+        :class="{'btn':true, 'btn-outline-primary':searchForm.type===0,'btn-primary':searchForm.type===1}"
+        @click="changeType(1)"
         style="margin-left:10px;"
-      >大众影评</button>
+      >专家影评</button>
     </div>
     <div style="margin:16px;">
       <div class="list-group">
@@ -92,7 +94,7 @@
                       v-if="commentary.like"
                     />
                   </a>
-                  <small style="padding-right:30px">123</small>
+                  <small style="padding-right:30px">{{commentary.likeNumber}}</small>
                   <a
                     href="javascript:void(0)"
                     @click="clickCollect(commentary)"
@@ -149,29 +151,33 @@ export default {
       ],
       pagination: {
         totalPage: 2,
-        pageRange: 7,
+        pageRange: 5,
         currentPage: 1
       },
-      type: 1
+      searchForm:{
+        keyword:'',
+        type:0,
+        pageNum:0,
+        pageSize:5
+      }
     };
   },
   methods: {
-    search(val) {
+    search() {
       //设置请求头
       this.$axios.defaults.headers.common[
         "Authorization"
       ] = sessionStorage.getItem("TOKEN");
-      let url = this.GLOBAL.BASE_URL + "long/get?page=" + val;
       this.$axios
-        .get(url)
+        .post("long/search/user",this.searchForm)
         .then(res => {
           return Promise.resolve(res.data);
         })
         .then(json => {
           if (json.code === "ACK") {
             console.log(json.data);
-            this.commentaryList = json.data;
-            this.pagination.totalPage = Math.ceil(json.data.length / 10);
+            this.commentaryList = json.data.list;
+            this.pagination.totalPage = Math.ceil(json.data.total / 10);
           } else {
             console.log(json.message);
           }
@@ -185,7 +191,8 @@ export default {
       this.$options.methods.search.bind(this)(val);
     },
     changeType(val) {
-      this.type = val;
+      this.searchForm.type = val;
+      this.$options.methods.search.bind(this)();
     },
     clickLike(commentary) {
       let flag = commentary.like
@@ -196,8 +203,10 @@ export default {
       var url = this.GLOBAL.BASE_URL;
       if (flag  === true) {
         url = url + "long/like/cancel?id=" + commentary.id;
+        commentary.likeNumber--;
       } else {
         url = url + "long/like?id=" + commentary.id;
+        commentary.likeNumber++;
       }
       this.$options.methods.getRequest.bind(this)(url);
     },

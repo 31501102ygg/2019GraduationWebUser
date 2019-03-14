@@ -358,7 +358,7 @@ export default {
       let splitRegion = /(\d{2})(\d{2})/.exec(regionId);
       let provinceId = splitRegion[1] * 10000;
       let cityId = provinceId + splitRegion[2] * 100;
-      var location = this.GLOBAL.BASE_REGIONS[0].children;
+      var location = this.GLOBAL.BASE_REGIONS;
       for (let region of location) {
         if (region.id === provinceId) {
           location = region;
