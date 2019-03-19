@@ -9,7 +9,10 @@
         alt="电影图片"
       >
       <div>
-        <div style="line-height:50px"><a :href="movie_info.src">{{movie_info.name}}</a></div>
+        <div style="line-height:50px"><a
+            href="javascript:viod(0)"
+            @click="turnToMovieInfo"
+          >{{movie_info.name}}</a></div>
         <div>
           <p>{{movie_info.simpleInfo}}</p>
         </div>
@@ -39,74 +42,159 @@
       <button
         type="button"
         class="btn btn-primary"
-        @click="submitCommentary"
+        data-toggle="modal"
+        data-target="#commentaryDialog"
       >提交影评</button>
     </div>
+    <submit-commentary
+      id="commentaryDialog"
+      :score="commentary.score"
+      :type="commentary.type"
+      v-on:submit="submitCommentary"
+      v-on:inputscore="watchScore"
+      v-on:inputtype="watchType"
+    ></submit-commentary>
   </div>
 </template>
 <script>
+import submitCT from "../../components/submitCommentary/submitCT";
+
 export default {
-  created(){
+  created() {
     //设置请求头
     this.$axios.defaults.headers.common[
       "Authorization"
     ] = sessionStorage.getItem("TOKEN");
     this.commentary.movieId = this.$route.query.movieId;
-    this.$options.methods.getMovieSimpleInfo.bind(this)(this.commentary.movieId)
+    this.$options.methods.getMovieSimpleInfo.bind(this)(
+      this.commentary.movieId
+    );
+  },
+  components: {
+    "submit-commentary": submitCT
   },
   data() {
     return {
-      movie_info:{
-        "imgUrl":'https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_img/p1014542496.jpg',
-        "src":'http://localhost:8080/#/movie_info?movieId=183',
-        "name":'拯救大兵瑞恩',
-        "simpleInfo":'导演 饶晓志 主演 陈建斌 / 任素汐 / 中国大陆 / 8.1分(425103评价)'
+      movieId: 0,
+      movie_info: {
+        imgUrl:
+          "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_img/p1014542496.jpg",
+        src: "http://localhost:8080/#/movie_info?movieId=183",
+        name: "拯救大兵瑞恩",
+        simpleInfo:
+          "导演 饶晓志 主演 陈建斌 / 任素汐 / 中国大陆 / 8.1分(425103评价)"
       },
-      commentary:{title:'',content: '',movieId:''},
+      commentary: {
+        title: "",
+        content: "",
+        movieId: "",
+        score: 0,
+        type: 0
+      },
       config: {
-        toolbarButtons: ['fullscreen', 'bold', 'italic', 'underline','strikeThrough','|', 'fontFamily', 'fontSize', 'color', '|','paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'embedly', 'insertTable', '|', 'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting','|', 'print', 'spellChecker', 'help', '|', 'fullscreen','|','undo', 'redo'],//['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertVideo', 'embedly', 'insertFile', 'insertTable', '|', 'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'spellChecker', 'help', 'html', '|', 'undo', 'redo'],//显示可操作项
+        toolbarButtons: [
+          "fullscreen",
+          "bold",
+          "italic",
+          "underline",
+          "strikeThrough",
+          "|",
+          "fontFamily",
+          "fontSize",
+          "color",
+          "|",
+          "paragraphFormat",
+          "align",
+          "formatOL",
+          "formatUL",
+          "outdent",
+          "indent",
+          "quote",
+          "-",
+          "insertLink",
+          "insertImage",
+          "embedly",
+          "insertTable",
+          "|",
+          "emoticons",
+          "specialCharacters",
+          "insertHR",
+          "selectAll",
+          "clearFormatting",
+          "|",
+          "print",
+          "spellChecker",
+          "help",
+          "|",
+          "fullscreen",
+          "|",
+          "undo",
+          "redo"
+        ], //['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertVideo', 'embedly', 'insertFile', 'insertTable', '|', 'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'spellChecker', 'help', 'html', '|', 'undo', 'redo'],//显示可操作项
         language: "zh_cn",
-        imageUploadURL: this.GLOBAL.BASE_URL+"commentary/upload",
+        imageUploadURL: this.GLOBAL.BASE_URL + "commentary/upload",
         events: {
           "froalaEditor.initialized": function() {
             console.log("initialized");
           },
-          "froalaEditor.blur":function(e, editor){
-            console.log(editor.html.get())
+          "froalaEditor.blur": function(e, editor) {
+            console.log(editor.html.get());
           }
         }
       }
     };
   },
   methods: {
-    getMovieSimpleInfo(movieId){
-      var url = this.GLOBAL.BASE_URL+"movie/info/simple?movieId="+movieId
-      console.log(url)
-      this.$axios.get(url)
-      .then(res=>{return Promise.resolve(res.data)})
-      .then(json=>{
-        console.log(json)
-        if(json.code==='ACK'){
-        this.movie_info=json.data
-        this.movie_info.src = this.GLOBAL.BASE_WEB_URL+'movie_info?movieId='+this.movie_id
-        }else{
-          console.log(json.message)
-        }
-      })
-      .catch(error=>{console.log(error)})
+    getMovieSimpleInfo(movieId) {
+      var url = this.GLOBAL.BASE_URL + "movie/info/simple?movieId=" + movieId;
+      console.log(url);
+      this.$axios
+        .get(url)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          console.log(json);
+          if (json.code === "ACK") {
+            this.movie_info = json.data;
+            this.movieId = movieId;
+          } else {
+            console.log(json.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
-    submitCommentary(){
-      this.$axios.post("long/add/normal",this.commentary)
-      .then(res=>{return Promise.resolve(res.data)})
-      .then(json=>{
-        console.log(json)
-        if(json.code === 'ACK'){
-          this.$parent.$parent.alert("success", json.message);
-        }else{
-          this.$parent.$parent.alert("warning", json.message);
-        }
-      })
-      .catch(error=>{console.log(error)})
+    submitCommentary() {
+      this.$axios
+        .post("long/add/normal", this.commentary)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(json => {
+          console.log(json);
+          if (json.code === "ACK") {
+            this.$parent.$parent.alert("success", json.message);
+          } else {
+            this.$parent.$parent.alert("warning", json.message);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    turnToMovieInfo() {
+      this.$router.push({
+        path: "/movie_info",
+        query: { movieId: this.movieId }
+      });
+    },
+    watchScore(val) {
+      this.commentary.score = parseInt(val);
+    },
+    watchType(val) {
+      this.commentary.type = val;
     }
   }
 };
