@@ -443,6 +443,11 @@ export default {
     } else {
       this.login_show = true;
     }
+    if(sessionStorage.getItem('INFO')){
+      let info = sessionStorage.getItem('INFO');
+      this.user_role = info.role;
+      this.user_power = info.power;
+    }
   },
   data() {
     return {
@@ -491,6 +496,7 @@ export default {
           if (json.code === "ACK") {
             this.$parent.alert("success", json.message);
             sessionStorage.setItem("TOKEN", json.data.token);
+            sessionStorage.setItem("INFO", json.data);
             this.user_name = this.login_form.username;
             this.user_role = json.data.role;
             this.user_power = json.data.power;

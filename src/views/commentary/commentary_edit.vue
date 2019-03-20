@@ -48,6 +48,7 @@
     </div>
     <submit-commentary
       id="commentaryDialog"
+      ref="commentaryDialog"
       :score="commentary.score"
       :type="commentary.type"
       v-on:submit="submitCommentary"
@@ -167,15 +168,27 @@ export default {
         });
     },
     submitCommentary() {
+      let url = "long/add/";
+      if(this.commentary.type === 0){
+        url+="normal";
+      }else{
+        if(sessionStorage.getItem("INFO").power != "pro"){
+          this.alert("你不是专家，不能发布专家影评")
+          return;
+        }
+        url+="pro";
+      }
       this.$axios
-        .post("long/add/normal", this.commentary)
+        .post(url, this.commentary)
         .then(res => {
+          this.$refs.commentaryDialog.$refs.modalCancel.click();
           return Promise.resolve(res.data);
         })
         .then(json => {
           console.log(json);
           if (json.code === "ACK") {
             this.$parent.$parent.alert("success", json.message);
+            this.$options.methods.turnToCommentary.bind(this)();
           } else {
             this.$parent.$parent.alert("warning", json.message);
           }
@@ -188,6 +201,11 @@ export default {
       this.$router.push({
         path: "/movie_info",
         query: { movieId: this.movieId }
+      });
+    },
+    turnToCommentary() {
+      this.$router.push({
+        path: "/commentary"
       });
     },
     watchScore(val) {
