@@ -45,6 +45,7 @@
                     class="dropdown-item"
                     href="javascript:void(0);"
                     @click="changeType(1)"
+                    v-if="power === 'pro'"
                   >专家</a>
                 </div>
               </div>
@@ -76,13 +77,19 @@
 <script>
 import markStars from "../movieInfo/markStars";
 export default {
+  created(){
+    if(sessionStorage.getItem("INFO")!=null){
+      this.power = JSON.parse(sessionStorage.getItem("INFO")).power;
+    }
+  },
   components: {
     "mark-stars": markStars
   },
   data() {
     return {
       vscore: 0,
-      vtype: 0
+      vtype: 0,
+      power: false
     };
   },
   watch: {

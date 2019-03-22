@@ -445,6 +445,8 @@ export default {
     }
     if(sessionStorage.getItem('INFO')){
       let info = sessionStorage.getItem('INFO');
+      info = JSON.parse(info);
+      console.log(info)
       this.user_role = info.role;
       this.user_power = info.power;
     }
@@ -496,7 +498,7 @@ export default {
           if (json.code === "ACK") {
             this.$parent.alert("success", json.message);
             sessionStorage.setItem("TOKEN", json.data.token);
-            sessionStorage.setItem("INFO", json.data);
+            sessionStorage.setItem("INFO", JSON.stringify(json.data));
             this.user_name = this.login_form.username;
             this.user_role = json.data.role;
             this.user_power = json.data.power;
@@ -520,6 +522,8 @@ export default {
     },
     logout() {
       this.login_show = true;
+      sessionStorage.clear();
+      this.$router.push("home")
     },
     register() {
       if (this.register_form.password != this.register_form.repeat) {

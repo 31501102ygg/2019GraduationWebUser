@@ -44,13 +44,13 @@
         <div class="row">
           <button
             type="button"
-            class="btn btn-primary"
+            :class="{'btn btn-primary':1===1, 'disabled':movie.shortCommentary}"
             data-toggle="modal"
             data-target="#markDialog"
           >短评</button>
           <button
             type="button"
-            class="btn btn-primary"
+            :class="{'btn btn-primary':1===1, 'disabled':movie.longCommentary}"
             @click="termToCommentaryEdit"
           >影评</button>
         </div>
