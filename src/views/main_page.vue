@@ -64,6 +64,7 @@
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
+                v-if="!login_show"
                 @click="navActive='收藏'"
               >
                 收藏
@@ -75,6 +76,7 @@
                 <a
                   class="dropdown-item"
                   href="#/store/movie"
+                  v-if="false"
                 >电影</a>
                 <a
                   class="dropdown-item"
@@ -90,7 +92,6 @@
             <li class="nav-item ">
               <a
                 class="nav-link"
-                disabled="true"
                 ref="login"
                 href="javascript:void(0);"
                 data-toggle="modal"
@@ -104,6 +105,7 @@
                 href="javascript:void(0);"
                 data-toggle="modal"
                 data-target="#registerModal"
+                v-if="login_show"
               >注册</a>
             </li>
             <li class="nav-item dropdown">
@@ -115,6 +117,7 @@
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
+                v-if="!login_show"
               >
                 设置
               </a>
@@ -523,7 +526,7 @@ export default {
     logout() {
       this.login_show = true;
       sessionStorage.clear();
-      this.$router.push("home")
+      window.location.reload(); 
     },
     register() {
       if (this.register_form.password != this.register_form.repeat) {

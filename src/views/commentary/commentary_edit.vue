@@ -189,6 +189,7 @@ export default {
           if (json.code === "ACK") {
             this.$parent.$parent.alert("success", json.message);
             this.$options.methods.turnToCommentary.bind(this)();
+            this.$router.push("/commentary")
           } else {
             this.$parent.$parent.alert("warning", json.message);
           }

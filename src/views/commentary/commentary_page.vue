@@ -111,7 +111,10 @@
                 </div>
               </div>
               <div class="d-flex justify-content-start">
-                <a href="javascript:void(0)" @click="turnToCommentaryInfo(commentary.id)">
+                <a
+                  href="javascript:void(0)"
+                  @click="turnToCommentaryInfo(commentary.id)"
+                >
                   <p class="mb-1">{{commentary.title}}</p>
                 </a>
               </div>
@@ -139,37 +142,42 @@ import pageNavigation from "../../components/pageNavigation.vue";
 
 export default {
   created() {
+    if(sessionStorage.getItem('TOKEN')!=null){
+      this.login = true
+    }
     this.$options.methods.search.bind(this)(1);
   },
   components: {
-    "stars": scoreStars,
+    stars: scoreStars,
     "page-navigation": pageNavigation
   },
   data() {
     return {
-      commentaryList: [
-      ],
+      login:false,
+      commentaryList: [],
       pagination: {
         totalPage: 2,
         pageRange: 5,
         currentPage: 1
       },
-      searchForm:{
-        keyword:'',
-        type:0,
-        pageNum:0,
-        pageSize:5
+      searchForm: {
+        keyword: "",
+        type: 0,
+        pageNum: 0,
+        pageSize: 5
       }
     };
   },
   methods: {
     search() {
-      //设置请求头
-      this.$axios.defaults.headers.common[
-        "Authorization"
-      ] = sessionStorage.getItem("TOKEN");
+      if (sessionStorage.getItem("TOKEN")) {
+        //设置请求头
+        this.$axios.defaults.headers.common[
+          "Authorization"
+        ] = sessionStorage.getItem("TOKEN");
+      }
       this.$axios
-        .post("long/search/user",this.searchForm)
+        .post("long/search/user", this.searchForm)
         .then(res => {
           return Promise.resolve(res.data);
         })
@@ -195,13 +203,17 @@ export default {
       this.$options.methods.search.bind(this)();
     },
     clickLike(commentary) {
-      let flag = commentary.like
+      let flag = commentary.like;
       commentary.like = !commentary.like;
       if (sessionStorage.getItem("TOKEN") == null) {
+        if(flag === true)
+          commentary.likeNumber--;
+        else
+          commentary.likeNumber++;
         return;
       }
       var url = this.GLOBAL.BASE_URL;
-      if (flag  === true) {
+      if (flag === true) {
         url = url + "long/like/cancel?id=" + commentary.id;
         commentary.likeNumber--;
       } else {
@@ -211,7 +223,7 @@ export default {
       this.$options.methods.getRequest.bind(this)(url);
     },
     clickCollect(commentary) {
-      let flag = commentary.collection
+      let flag = commentary.collection;
       commentary.collection = !commentary.collection;
       if (sessionStorage.getItem("TOKEN") == null) return;
       var url = this.GLOBAL.BASE_URL;
@@ -234,7 +246,7 @@ export default {
         })
         .then(data => {
           if (data.code === "ACK") {
-            console.log(data.data)
+            console.log(data.data);
             return data.data;
           } else {
             console.log(data);
@@ -244,8 +256,11 @@ export default {
           console.log(error);
         });
     },
-    turnToCommentaryInfo(commentaryId){
-      this.$router.push({path:'/commentary_info',query:{commentaryId:commentaryId}})
+    turnToCommentaryInfo(commentaryId) {
+      this.$router.push({
+        path: "/commentary_info",
+        query: { commentaryId: commentaryId }
+      });
     }
   }
 };
