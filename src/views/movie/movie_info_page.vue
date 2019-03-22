@@ -129,6 +129,7 @@ export default {
   },
   created() {
     this.movie_id = this.$route.query.movieId;
+    this.$options.methods.addReadNum.bind(this)(this.movie_id);
     this.pageHelper.data = this.movie_id;
     this.userShortCommentary.movieId = this.movie_id;
     this.$options.methods.getMovieById.bind(this)();
@@ -239,6 +240,15 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    addReadNum(id){
+      let url = this.GLOBAL.BASE_URL+"movie/read/inc?id="+id;
+      this.$axios.get(url)
+      .then(res=>{return Promise.resolve(res.data)})
+      .then(json=>{
+        console.log(json.message)
+      })
+      .catch(error=>{console.log(error)})
     },
     termToCommentaryEdit(){
       this.$router.push({path:'/commentary_edit',query:{movieId:this.movie_id}});

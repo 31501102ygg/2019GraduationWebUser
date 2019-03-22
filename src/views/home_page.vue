@@ -227,54 +227,59 @@ export default {
     this.$options.methods.loadNewestMovies.bind(this)();
     this.$options.methods.loadHotMovies.bind(this)();
   },
-  mounted(){
-  },
+  mounted() {},
   data() {
     return {
       pageIndex: index,
       activeHotMoviePage: 1,
       activeNewMoviePage: 1,
-      slideList: [{
-      "id": 2,
-      "title": "海王",
-      "content": "海王海王",
-      "img": "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/1545882653024.jpg",
-      "state": 1
-    },
-    {
-      "id": 3,
-      "title": "龙猫",
-      "content": "龙猫·····",
-      "img": "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2413274720.jpg",
-      "state": 1
-    },
-    {
-      "id": 12,
-      "title": "罗马 Roma",
-      "content": "突如其来的两个意外，同时砸中了女佣克里奥和雇主索菲亚，两人究竟该如何面对苦涩茫然的生活？",
-      "img": "http://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/1545884128757.jpg",
-      "state": 1
-    }],
+      slideList: [
+        {
+          id: 2,
+          title: "海王",
+          content: "海王海王",
+          img:
+            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/1545882653024.jpg",
+          state: 1
+        },
+        {
+          id: 3,
+          title: "龙猫",
+          content: "龙猫·····",
+          img:
+            "https://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/p2413274720.jpg",
+          state: 1
+        },
+        {
+          id: 12,
+          title: "罗马 Roma",
+          content:
+            "突如其来的两个意外，同时砸中了女佣克里奥和雇主索菲亚，两人究竟该如何面对苦涩茫然的生活？",
+          img:
+            "http://ygg-31501102-bucket.oss-cn-shenzhen.aliyuncs.com/movie_slide/1545884128757.jpg",
+          state: 1
+        }
+      ],
       hotmovies: [],
       newMovies: []
     };
   },
   methods: {
     //首页幻灯片方法区
-    getSlideList(){
-      this.$axios.get("slide/list")
-      .then(res=>{
-        return Promise.resolve(res);
-      })
-      .then(json=>{
-        json = json.data
-        console.log(json.data)
-        if(json.code === "ACK")
-          this.slideList = json.data;
-      })
-      .catch(error=>{
-        console.log(error)
-      })
+    getSlideList() {
+      this.$axios
+        .get("slide/list")
+        .then(res => {
+          return Promise.resolve(res);
+        })
+        .then(json => {
+          json = json.data;
+          console.log(json.data);
+          if (json.code === "ACK") this.slideList = json.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     //最新电影方法区
     getNext() {
@@ -333,7 +338,7 @@ export default {
         pageSize: 5
       };
       this.$axios
-        .post("/movie/newest", data)
+        .post("/movie/hot", data)
         .then(res => {
           return Promise.resolve(res.data);
         })
@@ -348,8 +353,8 @@ export default {
           console.log(error);
         });
     },
-        turnToMovieInfo(movieId){
-      this.$router.push({path:'/movie_info',query:{movieId:movieId}});
+    turnToMovieInfo(movieId) {
+      this.$router.push({ path: "/movie_info", query: { movieId: movieId } });
     }
   }
 };
@@ -364,8 +369,8 @@ export default {
   height: 500px;
 }
 
-#movieSlide{
-    background-color:#adcad3; 
+#movieSlide {
+  background-color: #adcad3;
 }
 /* .slide-text{
     color: black;
