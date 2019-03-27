@@ -183,7 +183,6 @@ export default {
         })
         .then(json => {
           if (json.code === "ACK") {
-            console.log(json.data);
             this.commentaryList = json.data.list;
             this.pagination.totalPage = Math.ceil(json.data.total / 10);
           } else {
@@ -246,7 +245,6 @@ export default {
         })
         .then(data => {
           if (data.code === "ACK") {
-            console.log(data.data);
             return data.data;
           } else {
             console.log(data);

@@ -56,7 +56,7 @@
                       v-if="commentary.like"
                     />
                   </a>
-                  <small style="padding-right:30px">123</small>
+                  <small style="padding-right:30px">{{commentary.likeNumber}}</small>
                   <a
                     href="javascript:void(0)"
                     @click="clickCollect(commentary)"
@@ -129,7 +129,6 @@ export default {
       this.$axios.get(url)
       .then(res=>{return Promise.resolve(res.data)})
       .then(json=>{
-        console.log(json)
         if(json.code === "ACK"){
           this.commentaryList = json.data.list;
           this.pagination.totalPage = Math.ceil(json.data.total/this.pagination.pageRange);
@@ -138,6 +137,59 @@ export default {
         }
       })
       .catch(error=>{console.log(error)})
+    },
+    clickLike(commentary) {
+      let flag = commentary.like;
+      commentary.like = !commentary.like;
+      if (sessionStorage.getItem("TOKEN") == null) {
+        if(flag === true)
+          commentary.likeNumber--;
+        else
+          commentary.likeNumber++;
+        return;
+      }
+      var url = this.GLOBAL.BASE_URL;
+      if (flag === true) {
+        url = url + "long/like/cancel?id=" + commentary.id;
+        commentary.likeNumber--;
+      } else {
+        url = url + "long/like?id=" + commentary.id;
+        commentary.likeNumber++;
+      }
+      this.$options.methods.getRequest.bind(this)(url);
+    },
+    clickCollect(commentary) {
+      let flag = commentary.collection;
+      commentary.collection = !commentary.collection;
+      if (sessionStorage.getItem("TOKEN") == null) return;
+      var url = this.GLOBAL.BASE_URL;
+      if (flag === true) {
+        url = url + "long/collection/cancel?id=" + commentary.id;
+      } else {
+        url = url + "long/collection/add?id=" + commentary.id;
+      }
+      this.$options.methods.getRequest.bind(this)(url);
+    },
+    getRequest(url) {
+      //设置请求头
+      this.$axios.defaults.headers.common[
+        "Authorization"
+      ] = sessionStorage.getItem("TOKEN");
+      this.$axios
+        .get(url)
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+        .then(data => {
+          if (data.code === "ACK") {
+            return data.data;
+          } else {
+            console.log(data);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

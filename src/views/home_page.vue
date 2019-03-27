@@ -274,7 +274,6 @@ export default {
         })
         .then(json => {
           json = json.data;
-          console.log(json.data);
           if (json.code === "ACK") this.slideList = json.data;
         })
         .catch(error => {

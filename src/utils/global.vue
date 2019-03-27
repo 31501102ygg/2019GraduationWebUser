@@ -1,8 +1,8 @@
 <script>
-// const BASE_URL = "http://47.107.70.187:8090/";
-// const BASE_WEB_URL = "http://47.107.70.187:8080/";
-const BASE_URL = "http://localhost:8090/";
-const BASE_WEB_URL = "http://localhost:8080/";
+const BASE_URL = "http://47.107.70.187:8090/";
+const BASE_WEB_URL = "http://47.107.70.187:8080/";
+// const BASE_URL = "http://localhost:8090/";
+// const BASE_WEB_URL = "http://localhost:8080/";
 
 const Film_Type = [
   { value: "", label: "不限" },

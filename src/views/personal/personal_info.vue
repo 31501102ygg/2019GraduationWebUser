@@ -306,7 +306,7 @@ export default {
         console.log("图像超过3MB，无法上传");
         return;
       }
-      console.log("file size:" + file.size);
+      // console.log("file size:" + file.size);
       form.append("file", file);
       this.$axios
         .post("/upload/img/movie", form)
@@ -351,7 +351,6 @@ export default {
     },
     addressSelect(object) {
       this.user.location = object.area.code;
-      console.log(object);
     },
     regionExchange(id) {
       let regionId = id;

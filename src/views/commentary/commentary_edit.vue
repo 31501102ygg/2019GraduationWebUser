@@ -136,10 +136,10 @@ export default {
         imageUploadURL: this.GLOBAL.BASE_URL + "commentary/upload",
         events: {
           "froalaEditor.initialized": function() {
-            console.log("initialized");
+            // console.log("initialized");
           },
           "froalaEditor.blur": function(e, editor) {
-            console.log(editor.html.get());
+            // console.log(editor.html.get());
           }
         }
       }
@@ -148,14 +148,12 @@ export default {
   methods: {
     getMovieSimpleInfo(movieId) {
       var url = this.GLOBAL.BASE_URL + "movie/info/simple?movieId=" + movieId;
-      console.log(url);
       this.$axios
         .get(url)
         .then(res => {
           return Promise.resolve(res.data);
         })
         .then(json => {
-          console.log(json);
           if (json.code === "ACK") {
             this.movie_info = json.data;
             this.movieId = movieId;
@@ -185,7 +183,6 @@ export default {
           return Promise.resolve(res.data);
         })
         .then(json => {
-          console.log(json);
           if (json.code === "ACK") {
             this.$parent.$parent.alert("success", json.message);
             this.$options.methods.turnToCommentary.bind(this)();

@@ -449,7 +449,6 @@ export default {
     if(sessionStorage.getItem('INFO')){
       let info = sessionStorage.getItem('INFO');
       info = JSON.parse(info);
-      console.log(info)
       this.user_role = info.role;
       this.user_power = info.power;
     }
@@ -484,7 +483,7 @@ export default {
       });
     },
     navSelect(e) {
-      console.log(e.target);
+      // console.log(e.target);
     },
     removeActive() {
       this.$refs.home.classList.remove("active");
@@ -564,7 +563,6 @@ export default {
         .then(json => {
           json = json.data;
           this.user = json.data;
-          console.log(json);
         })
         .catch(error => {
           console.log(error);
@@ -577,7 +575,6 @@ export default {
           return Promise.resolve(res.data);
         })
         .then(json => {
-          console.log(json);
           this.GLOBAL.BASE_REGIONS = json[0].children;
         })
         .catch(error => {
@@ -585,7 +582,6 @@ export default {
         });
     },
     changeMessage(val) {
-      console.log(val);
       this.askProMessage.content = val;
     },
     upgradeProSubmit() {

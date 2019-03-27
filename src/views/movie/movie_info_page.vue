@@ -38,8 +38,8 @@
           class="row"
           style="align-items:center"
         >
-          <h1>{{movie_score.toFixed(1)}}</h1>
-          <stars :score="movie_score"></stars>
+          <h1>{{movie.score.toFixed(1)}}</h1>
+          <stars :score="movie.score"></stars>
         </div>
         <div class="row">
           <button
@@ -138,7 +138,6 @@ export default {
   data() {
     return {
       movie_id: 0,
-      movie_score: 9.2,
       movie_year: 2018,
       pageHelper: {
         data: "",
@@ -164,7 +163,9 @@ export default {
         { id: 8, type_name: "片长：", value_name: "sheetLength" },
         { id: 9, type_name: "外文名：", value_name: "foreignName" }
       ],
-      movie: {},
+      movie: {
+        score:0
+      },
       userShortCommentary: {
         score: 0,
         content: "",
@@ -184,7 +185,7 @@ export default {
         .then(json => {
           if (json.code === "ACK") {
             this.movie = json.data;
-            this.movie_year = /\d+/.exec(this.movie.releaseTimeString)[0];
+            this.movie_year = /\d+/.exec(this.movie.releaseTime)[0];
           } else {
             this.$parent.alert("warning", json.message);
           }
@@ -202,7 +203,6 @@ export default {
         .then(json => {
           if (json.code === "ACK") {
             this.shortCommentarys = json.data;
-            console.log(json.data);
           } else {
             this.$parent.alert("warning", json.message);
           }
@@ -228,7 +228,6 @@ export default {
           return Promise.resolve(res.data);
         })
         .then(json => {
-          console.log(json);
           if (json.code === "ACK") {
             this.$parent.$parent.alert("success", json.message);
           } else {
@@ -246,7 +245,7 @@ export default {
       this.$axios.get(url)
       .then(res=>{return Promise.resolve(res.data)})
       .then(json=>{
-        console.log(json.message)
+        // console.log(json.message)
       })
       .catch(error=>{console.log(error)})
     },

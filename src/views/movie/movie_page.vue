@@ -23,13 +23,13 @@
       </div>
       <div class="m-3" style="display:flex;">
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="orderBy" id="exampleRadios1" value="1" v-model="searchForm.orderBy" checked>
+          <input class="form-check-input" type="radio" name="orderBy" id="exampleRadios1" value="0" v-model="searchForm.orderBy" checked @click="redio1Click">
           <label class="form-check-label" for="exampleRadios1">
             按时间排序
           </label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="orderBy" id="exampleRadios2" value="2" v-model="searchForm.orderBy">
+          <input class="form-check-input" type="radio" name="orderBy" id="exampleRadios2" value="1" v-model="searchForm.orderBy" @click="redio2Click">
           <label class="form-check-label" for="exampleRadios2">
             按评分排序
           </label>
@@ -152,7 +152,7 @@ export default {
         keyword:"",
         type: "",
         makeState: "",
-        orderBy: 1
+        orderBy: 0
       },
       pagination: {
         totalPage: 0,
@@ -192,6 +192,14 @@ export default {
       this.searchForm.pageNum = item;
       this.$options.methods.searchMovie.bind(this)();
     },
+    redio1Click(){
+      this.searchForm.orderBy = 0;
+      this.$options.methods.searchMovie.bind(this)();
+    },
+    redio2Click(){
+      this.searchForm.orderBy = 1;
+      this.$options.methods.searchMovie.bind(this)();
+    },
     changePagination() {
       if (this.pagination.totalPage > this.pagination.pageRange) {
         this.pagination.startPage =
@@ -221,7 +229,7 @@ export default {
       ) {
         this.pagination.page_item.push(i);
       }
-      console.log(this.pagination);
+      // console.log(this.pagination);
     },
     searchMovie() {
       this.$axios
@@ -233,7 +241,6 @@ export default {
           let movies = json.data.list;
           this.pagination.totalPage = Math.ceil(json.data.pageNumber / 20);
           this.$options.methods.changePagination.bind(this)();
-          console.log(this.totalMovieNumber);
           this.movies.movies1.splice(0);
           this.movies.movies2.splice(0);
           this.movies.movies3.splice(0);
