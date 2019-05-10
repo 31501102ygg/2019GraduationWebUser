@@ -48,7 +48,7 @@
         >
           <div class="row">
             <div class="col-2">
-              <a href="#">
+              <a href="javascript:void(0)">
                 <img
                   class="movie-img"
                   :src=commentary.movieUrl

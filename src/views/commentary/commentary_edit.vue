@@ -170,8 +170,8 @@ export default {
       if(this.commentary.type === 0){
         url+="normal";
       }else{
-        if(sessionStorage.getItem("INFO").power != "pro"){
-          this.alert("你不是专家，不能发布专家影评")
+        if(JSON.parse(sessionStorage.getItem("INFO")).power != "pro"){
+          alert("你不是专家，不能发布专家影评")
           return;
         }
         url+="pro";

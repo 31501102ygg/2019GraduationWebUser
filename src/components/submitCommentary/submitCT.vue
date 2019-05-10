@@ -33,7 +33,7 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  普通
+                  {{typeName}}
                 </button>
                 <div class="dropdown-menu">
                   <a
@@ -88,6 +88,7 @@ export default {
   data() {
     return {
       vscore: 0,
+      typeName: '普通',
       vtype: 0,
       power: false
     };
@@ -97,6 +98,10 @@ export default {
       this.$emit("inputscore", newVal);
     },
     vtype(newVal, OldVal) {
+      if(newVal === 1)
+        this.typeName = '专家'
+      else
+        this.typeName = '普通'
       this.$emit("inputtype", newVal);
     }
   },

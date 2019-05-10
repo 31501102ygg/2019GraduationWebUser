@@ -158,7 +158,7 @@ export default {
         {
           id: 7,
           type_name: "上映日期：",
-          value_name: "releaseTimeString"
+          value_name: "releaseTime"
         },
         { id: 8, type_name: "片长：", value_name: "sheetLength" },
         { id: 9, type_name: "外文名：", value_name: "foreignName" }

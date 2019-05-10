@@ -73,7 +73,7 @@
                 </div>
               </div>
               <div class="d-flex justify-content-start">
-                <a href="#">
+                <a href="javascript:void(0)" @click="turnToCommentaryInfo(commentary.id)">
                   <p class="mb-1">{{commentary.title}}</p>
                 </a>
               </div>
@@ -137,6 +137,12 @@ export default {
         }
       })
       .catch(error=>{console.log(error)})
+    },
+    turnToCommentaryInfo(commentaryId) {
+      this.$router.push({
+        path: "/commentary_info",
+        query: { commentaryId: commentaryId }
+      });
     },
     clickLike(commentary) {
       let flag = commentary.like;
