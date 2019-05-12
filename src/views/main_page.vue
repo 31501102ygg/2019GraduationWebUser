@@ -503,6 +503,9 @@ export default {
             sessionStorage.setItem("INFO", JSON.stringify(json.data));
             this.user_name = this.login_form.username;
             this.user_role = json.data.role;
+            if (this.user_role != "user"){
+              this.$parent.alert("danger", 此账号不是网站用户账号);
+            }
             this.user_power = json.data.power;
             this.$refs.login_button.classList.remove("disabled");
             $("#loginModal").modal("hide");
