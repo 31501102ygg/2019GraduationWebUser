@@ -498,15 +498,16 @@ export default {
         .then(json => {
           this.$refs.login_button.removeAttribute("disabled");
           if (json.code === "ACK") {
-            this.$parent.alert("success", json.message);
-            sessionStorage.setItem("TOKEN", json.data.token);
-            sessionStorage.setItem("INFO", JSON.stringify(json.data));
             this.user_name = this.login_form.username;
             this.user_role = json.data.role;
             if (this.user_role != "user"){
-              this.$parent.alert("danger", 此账号不是网站用户账号);
+              this.$parent.alert("danger", '此账号不是网站用户账号');
+              return;
             }
             this.user_power = json.data.power;
+            this.$parent.alert("success", json.message);
+            sessionStorage.setItem("TOKEN", json.data.token);
+            sessionStorage.setItem("INFO", JSON.stringify(json.data));
             this.$refs.login_button.classList.remove("disabled");
             $("#loginModal").modal("hide");
             this.$refs.login.setAttribute("disabled", "true");
